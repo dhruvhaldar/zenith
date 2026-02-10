@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith Astronomy Toolkit</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        .artifact { margin-bottom: 40px; }
+        img { max-width: 100%; border: 1px solid #ddd; }
+        code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>Zenith Astronomy Toolkit</h1>
+    <p>Welcome to Zenith, an engineering-focused astronomy toolkit.</p>
+
+    <h2>Live API Demo</h2>
+    <ul>
+        <li><a href="/api/snr?mag=12&exposure=60">Calculate SNR (Mag 12, 60s)</a></li>
+        <li><a href="/api/transit?period=3.5">Simulate Transit (P=3.5d)</a></li>
+        <li><a href="/api/hubble?d=100">Hubble Recession Velocity (d=100 Mpc)</a></li>
+    </ul>
+
+    <h2>Generated Artifacts</h2>
+
+    <div class="artifact">
+        <h3>1. Telescope Performance (SNR)</h3>
+        <p>Signal-to-Noise Ratio vs Magnitude for an 8-inch telescope.</p>
+        <img src="/assets/figure1.png" alt="SNR Plot">
+    </div>
+
+    <div class="artifact">
+        <h3>2. Exoplanet Transit Light Curve</h3>
+        <p>Simulated light curve of a Hot Jupiter transiting a Sun-like star.</p>
+        <img src="/assets/figure2.png" alt="Transit Light Curve">
+    </div>
+
+    <div class="artifact">
+        <h3>3. Visibility Plot</h3>
+        <p>Altitude of Sirius over time from Stockholm.</p>
+        <img src="/assets/figure3.png" alt="Visibility Plot">
+    </div>
+
+    <hr>
+    <p><a href="https://github.com/your-username/zenith">View on GitHub</a></p>
+</body>
+</html>
