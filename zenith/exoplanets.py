@@ -57,19 +57,19 @@ class TransitSimulator:
         # If |x| < R_star + R_planet: partial or full transit
         # If |x| < R_star - R_planet: full transit
 
-        for i, val in enumerate(x):
-            dist = abs(val)
-            if dist > (self.R_star + self.R_planet):
-                flux[i] = 1.0
-            elif dist < (self.R_star - self.R_planet):
-                # Full transit
-                flux[i] = 1.0 - self.depth
-            else:
-                # Ingress/Egress
-                # Simplified linear interpolation for "introductory" model
-                # Overlap fraction approx
-                overlap = (self.R_star + self.R_planet - dist) / (2 * self.R_planet)
-                flux[i] = 1.0 - self.depth * overlap
+        dist = np.abs(x)
+
+        # Full transit
+        full_transit = dist < (self.R_star - self.R_planet)
+        flux[full_transit] = 1.0 - self.depth
+
+        # Ingress/Egress
+        ingress_egress = (dist >= (self.R_star - self.R_planet)) & (dist <= (self.R_star + self.R_planet))
+        if np.any(ingress_egress):
+            # Simplified linear interpolation for "introductory" model
+            # Overlap fraction approx
+            overlap = (self.R_star + self.R_planet - dist[ingress_egress]) / (2 * self.R_planet)
+            flux[ingress_egress] = 1.0 - self.depth * overlap
 
         return time / 3600.0, flux
 
