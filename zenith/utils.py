@@ -2,6 +2,8 @@
 Zenith Utils: Physical and Astronomical Constants
 """
 
+import math
+
 # Physical Constants
 c = 2.99792458e8        # Speed of light in vacuum [m/s]
 G = 6.67430e-11         # Gravitational constant [m^3 kg^-1 s^-2]
@@ -30,10 +32,10 @@ def m_to_mpc(m):
 
 def rad_to_deg(rad):
     """Convert radians to degrees."""
-    import math
-    return rad * (180.0 / math.pi)
+    # ⚡ Bolt: Used math.degrees for C-optimized conversion
+    return math.degrees(rad)
 
 def deg_to_rad(deg):
     """Convert degrees to radians."""
-    import math
-    return deg * (math.pi / 180.0)
+    # ⚡ Bolt: Used math.radians for C-optimized conversion
+    return math.radians(deg)
