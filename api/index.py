@@ -28,11 +28,14 @@ def home():
 @app.route('/api/snr')
 def get_snr():
     try:
-        # 🛡️ Sentinel: Input validation
+        # 🛡️ Sentinel: Input validation with reasonable boundaries to prevent DoS via huge values
         mag = float(request.args.get('mag', 12.0))
         exposure = float(request.args.get('exposure', 60.0))
-        if exposure < 0:
-            return jsonify({"error": "Exposure cannot be negative"}), 400
+
+        if not (-30 <= mag <= 50):
+            return jsonify({"error": "Magnitude out of reasonable bounds (-30 to 50)"}), 400
+        if not (0 <= exposure <= 100000):
+            return jsonify({"error": "Exposure out of reasonable bounds (0 to 100000 seconds)"}), 400
     except ValueError:
         return jsonify({"error": "Invalid input parameters"}), 400
 
@@ -50,10 +53,10 @@ def get_snr():
 @app.route('/api/transit')
 def get_transit():
     try:
-        # 🛡️ Sentinel: Input validation
+        # 🛡️ Sentinel: Input validation with limits
         period = float(request.args.get('period', 4.0))
-        if period <= 0:
-            return jsonify({"error": "Period must be greater than 0"}), 400
+        if not (0 < period <= 100000):
+            return jsonify({"error": "Period must be between 0 and 100000 days"}), 400
     except ValueError:
         return jsonify({"error": "Invalid input parameters"}), 400
 
@@ -68,10 +71,10 @@ def get_transit():
 @app.route('/api/hubble')
 def get_hubble():
     try:
-        # 🛡️ Sentinel: Input validation
+        # 🛡️ Sentinel: Input validation with limits
         d = float(request.args.get('d', 10.0))
-        if d < 0:
-            return jsonify({"error": "Distance cannot be negative"}), 400
+        if not (0 <= d <= 15000):
+            return jsonify({"error": "Distance out of reasonable bounds (0 to 15000 Mpc)"}), 400
     except ValueError:
         return jsonify({"error": "Invalid input parameters"}), 400
 
