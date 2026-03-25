@@ -21,6 +21,17 @@ def handle_exception(e):
         return e
     return jsonify({"error": "An internal error occurred"}), 500
 
+# 🛡️ Sentinel: Add global security headers for defense in depth
+@app.after_request
+def add_security_headers(response):
+    # Prevent clickjacking attacks
+    response.headers['X-Frame-Options'] = 'DENY'
+    # Prevent MIME-sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    # Enforce HTTPS connections
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    return response
+
 @app.route('/')
 def home():
     return "Zenith Astronomy Toolkit API. Visit /api/snr or /api/transit for examples."
