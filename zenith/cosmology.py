@@ -1,3 +1,4 @@
+import math
 import numpy as np
 from scipy.integrate import quad
 from zenith.utils import c, mpc_to_m, parsec
@@ -58,7 +59,8 @@ def lookback_time(z, H0=70.0, omega_m=0.3, omega_l=0.7):
     h0_gyr = h0_s * (1e9 * 365.25 * 24 * 3600.0)
 
     def integrand(x):
-        return 1.0 / ((1.0 + x) * np.sqrt(omega_m * (1.0 + x)**3 + omega_l))
+        # ⚡ Bolt: Use math.sqrt instead of np.sqrt to avoid scalar dispatch overhead in quad integration
+        return 1.0 / ((1.0 + x) * math.sqrt(omega_m * (1.0 + x)**3 + omega_l))
 
     result, error = quad(integrand, 0, z)
 
