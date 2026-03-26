@@ -1,4 +1,4 @@
-import numpy as np
+import math
 from datetime import datetime, timezone
 from zenith.utils import deg_to_rad, rad_to_deg
 
@@ -20,7 +20,8 @@ def calculate_lst(longitude, time):
     # Calculate JD
     # Python datetime timestamp is seconds since 1970-01-01 00:00:00 UTC
     # JD of 1970-01-01 is 2440587.5
-    ts = time.replace(tzinfo=timezone.utc).timestamp()
+    # ⚡ Bolt: avoid datetime.replace overhead when timezone is already set
+    ts = time.timestamp() if time.tzinfo else time.replace(tzinfo=timezone.utc).timestamp()
     jd = (ts / 86400.0) + 2440587.5
 
     # Days since J2000
@@ -58,9 +59,10 @@ def ra_dec_to_alt_az(ra, dec, lat, lon, time):
     lat_rad = deg_to_rad(lat)
 
     # Altitude
-    sin_alt = np.sin(dec_rad) * np.sin(lat_rad) + \
-              np.cos(dec_rad) * np.cos(lat_rad) * np.cos(ha_rad)
-    alt_rad = np.arcsin(sin_alt)
+    # ⚡ Bolt: Use math module instead of numpy for scalar functions to avoid numpy dispatch overhead
+    sin_alt = math.sin(dec_rad) * math.sin(lat_rad) + \
+              math.cos(dec_rad) * math.cos(lat_rad) * math.cos(ha_rad)
+    alt_rad = math.asin(sin_alt)
 
     # Azimuth
     # cos(Az) = (sin(Dec) - sin(Alt)sin(Lat)) / (cos(Alt)cos(Lat))
@@ -76,10 +78,10 @@ def ra_dec_to_alt_az(ra, dec, lat, lon, time):
     # X = tan(delta)cos(phi) - sin(phi)cos(H)
     # Az = atan2(Y, X)
 
-    Y = -np.sin(ha_rad)
-    X = np.tan(dec_rad) * np.cos(lat_rad) - np.sin(lat_rad) * np.cos(ha_rad)
+    Y = -math.sin(ha_rad)
+    X = math.tan(dec_rad) * math.cos(lat_rad) - math.sin(lat_rad) * math.cos(ha_rad)
 
-    az_rad = np.arctan2(Y, X)
+    az_rad = math.atan2(Y, X)
 
     # Convert back to degrees
     alt = rad_to_deg(alt_rad)
@@ -104,4 +106,5 @@ def calculate_airmass(altitude):
     # Simple secant approximation: X = sec(z)
     # Better approximation for low altitudes: Young's or Pickering's
     # Using simple secant for now as per "introductory" scope, but let's add a clamp
-    return 1.0 / np.cos(zenith_angle_rad)
+    # ⚡ Bolt: Use math module instead of numpy
+    return 1.0 / math.cos(zenith_angle_rad)
