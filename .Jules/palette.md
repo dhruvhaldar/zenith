@@ -1,7 +1,3 @@
-## 2024-05-24 - HTML Structural Semantics & Keyboard A11y
-**Learning:** Adding a `<main>` tag around the primary content instantly improves screen reader navigation and provides semantic structure, which is crucial for accessibility. Furthermore, defining robust `:focus-visible` styles on interactive elements like links ensures keyboard users have clear visual feedback without compromising mouse user experience.
-**Action:** When reviewing simple HTML templates, prioritize wrapping core content in semantic landmarks (like `<main>`) and verifying that focus states are distinct and visible against the background.
-
-## 2026-03-25 - External Links & Target Blank Navigation Context
-**Learning:** API demo links that return raw JSON payloads break the user's flow and context if they navigate in the same tab, forcing them to use the back button. Adding `target="_blank"` solves this, but for accessibility and clarity, it must be accompanied by an indicator (e.g., "↗") and screen-reader only text (e.g., "(opens in a new tab)") so all users are informed of the behavior change.
-**Action:** Whenever introducing links to raw API endpoints or external resources in documentation pages, ensure they open in a new tab and explicitly indicate this behavior to screen readers. If strict styling rules forbid custom CSS (like `.sr-only`), use the native `aria-label` attribute on the `<a>` element to provide this context seamlessly.
+## 2024-03-26 - Convert Static API Links to Interactive Forms
+**Learning:** When exposing API endpoints on a documentation page, static query-parameter links force users to manually edit URLs to test different inputs, creating friction. Converting these links to accessible HTML micro-forms dramatically lowers the barrier to entry for testing APIs while maintaining simplicity.
+**Action:** Always provide interactive inputs (like `<form>` with standard `<input>` and `<button type="submit">`) instead of static query-parameter links for API demos to improve immediate usability.
