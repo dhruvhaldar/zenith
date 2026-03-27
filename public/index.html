@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenith Astronomy Toolkit</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔭</text></svg>">
     <style>
         body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
         h1 { color: #333; }
@@ -16,15 +17,16 @@
     </style>
 </head>
 <body>
-    <main>
+    <header>
         <h1>Zenith Astronomy Toolkit</h1>
         <p>Welcome to Zenith, an engineering-focused astronomy toolkit.</p>
-
+    </header>
+    <main>
         <h2>Live API Demo</h2>
         <ul>
-            <li><a href="/api/snr?mag=12&exposure=60" target="_blank" rel="noopener noreferrer" aria-label="Calculate SNR (Mag 12, 60s) (opens in a new tab)">Calculate SNR (Mag 12, 60s) <span aria-hidden="true">↗</span></a></li>
-            <li><a href="/api/transit?period=3.5" target="_blank" rel="noopener noreferrer" aria-label="Simulate Transit (P=3.5d) (opens in a new tab)">Simulate Transit (P=3.5d) <span aria-hidden="true">↗</span></a></li>
-            <li><a href="/api/hubble?d=100" target="_blank" rel="noopener noreferrer" aria-label="Hubble Recession Velocity (d=100 Mpc) (opens in a new tab)">Hubble Recession Velocity (d=100 Mpc) <span aria-hidden="true">↗</span></a></li>
+            <li><a href="/api/snr?mag=12&exposure=60" target="_blank" rel="noopener noreferrer" aria-label="Calculate SNR (Mag 12, 60s) (opens in a new tab)" title="Opens in a new tab">Calculate SNR (Mag 12, 60s) <span aria-hidden="true">↗</span></a></li>
+            <li><a href="/api/transit?period=3.5" target="_blank" rel="noopener noreferrer" aria-label="Simulate Transit (P=3.5d) (opens in a new tab)" title="Opens in a new tab">Simulate Transit (P=3.5d) <span aria-hidden="true">↗</span></a></li>
+            <li><a href="/api/hubble?d=100" target="_blank" rel="noopener noreferrer" aria-label="Hubble Recession Velocity (d=100 Mpc) (opens in a new tab)" title="Opens in a new tab">Hubble Recession Velocity (d=100 Mpc) <span aria-hidden="true">↗</span></a></li>
         </ul>
 
         <h2>Generated Artifacts</h2>
@@ -47,8 +49,10 @@
             <img src="/assets/figure3.png" alt="Line graph plotting the altitude of Sirius from Stockholm over time. The curve shows the star rising above the horizon, reaching a peak altitude of around 15 degrees, and setting, remaining below the airmass limit of 30 degrees.">
         </div>
 
-        <hr>
-        <p><a href="https://github.com/your-username/zenith" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub (opens in a new tab)">View on GitHub <span aria-hidden="true">↗</span></a></p>
     </main>
+    <footer>
+        <hr>
+        <p><a href="https://github.com/your-username/zenith" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub (opens in a new tab)" title="Opens in a new tab">View on GitHub <span aria-hidden="true">↗</span></a></p>
+    </footer>
 </body>
 </html>
