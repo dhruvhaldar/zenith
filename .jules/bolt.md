@@ -4,3 +4,7 @@
 ## 2026-10-27 - Optimizing `scipy.integrate.quad` Integrands
 **Learning:** Using `numpy` functions (like `np.sqrt`) for scalar operations inside `scipy.integrate.quad` integrands introduces significant overhead because `quad` calls the integrand repeatedly with scalar float values, triggering NumPy's scalar dispatch overhead.
 **Action:** Use standard Python `math` module functions (like `math.sqrt`) instead of NumPy functions when writing integrands for `scipy.integrate.quad` where possible, for faster integration.
+
+## 2024-05-14 - Replace numpy with math module for scalar math
+**Learning:** Replacing `numpy` with the standard Python `math` module for trigonometric operations yields significant performance gains for scalar operations by avoiding scalar dispatch overhead. However, when switching to `math.asin` or `math.acos`, explicitly clamp inputs to `[-1.0, 1.0]` to prevent `ValueError: math domain error` caused by microscopic floating-point inaccuracies, which `numpy` typically handles with warnings rather than fatal errors.
+**Action:** When replacing `numpy` with `math` for scalar trig operations, ensure inputs are clamped to their valid mathematical domains before calling the function.
