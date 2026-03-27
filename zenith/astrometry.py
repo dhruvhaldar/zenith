@@ -1,4 +1,4 @@
-import numpy as np
+import math
 from datetime import datetime, timezone
 from zenith.utils import deg_to_rad, rad_to_deg
 
@@ -57,10 +57,15 @@ def ra_dec_to_alt_az(ra, dec, lat, lon, time):
     dec_rad = deg_to_rad(dec)
     lat_rad = deg_to_rad(lat)
 
+    # ⚡ Bolt: Use math module instead of numpy for scalar trigonometric operations
+    # to avoid significant scalar dispatch overhead.
+
     # Altitude
-    sin_alt = np.sin(dec_rad) * np.sin(lat_rad) + \
-              np.cos(dec_rad) * np.cos(lat_rad) * np.cos(ha_rad)
-    alt_rad = np.arcsin(sin_alt)
+    sin_alt = math.sin(dec_rad) * math.sin(lat_rad) + \
+              math.cos(dec_rad) * math.cos(lat_rad) * math.cos(ha_rad)
+    # Clamp sin_alt to [-1, 1] to avoid math domain errors due to floating point inaccuracies
+    sin_alt = max(-1.0, min(1.0, sin_alt))
+    alt_rad = math.asin(sin_alt)
 
     # Azimuth
     # cos(Az) = (sin(Dec) - sin(Alt)sin(Lat)) / (cos(Alt)cos(Lat))
@@ -76,10 +81,10 @@ def ra_dec_to_alt_az(ra, dec, lat, lon, time):
     # X = tan(delta)cos(phi) - sin(phi)cos(H)
     # Az = atan2(Y, X)
 
-    Y = -np.sin(ha_rad)
-    X = np.tan(dec_rad) * np.cos(lat_rad) - np.sin(lat_rad) * np.cos(ha_rad)
+    Y = -math.sin(ha_rad)
+    X = math.tan(dec_rad) * math.cos(lat_rad) - math.sin(lat_rad) * math.cos(ha_rad)
 
-    az_rad = np.arctan2(Y, X)
+    az_rad = math.atan2(Y, X)
 
     # Convert back to degrees
     alt = rad_to_deg(alt_rad)
@@ -104,4 +109,4 @@ def calculate_airmass(altitude):
     # Simple secant approximation: X = sec(z)
     # Better approximation for low altitudes: Young's or Pickering's
     # Using simple secant for now as per "introductory" scope, but let's add a clamp
-    return 1.0 / np.cos(zenith_angle_rad)
+    return 1.0 / math.cos(zenith_angle_rad)
