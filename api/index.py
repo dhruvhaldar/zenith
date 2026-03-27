@@ -30,6 +30,8 @@ def add_security_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     # Enforce HTTPS connections
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    # Prevent XSS and data injection attacks
+    response.headers['Content-Security-Policy'] = "default-src 'none'; frame-ancestors 'none'"
     return response
 
 @app.route('/')
