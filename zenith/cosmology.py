@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from functools import lru_cache
 from scipy.integrate import quad
 from zenith.utils import c, mpc_to_m, parsec
 
@@ -29,6 +30,10 @@ def redshift_from_velocity(v_km_s):
     c_km_s = c / 1000.0
     return v_km_s / c_km_s
 
+# ⚡ Bolt: Cache expensive numerical integration results
+# Lookback time calculation uses scipy.integrate.quad, which is computationally expensive.
+# Caching avoids redundant integrations for frequently used redshift values and default parameters.
+@lru_cache(maxsize=128)
 def lookback_time(z, H0=70.0, omega_m=0.3, omega_l=0.7):
     """
     Calculate lookback time for a given redshift in a flat LambdaCDM model.
