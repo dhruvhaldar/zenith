@@ -13,12 +13,15 @@ app = Flask(__name__)
 
 from werkzeug.exceptions import HTTPException
 
-# 🛡️ Sentinel: Global error handler to prevent stack trace leakage
+# 🛡️ Sentinel: Global error handler to prevent stack trace leakage and HTML injection
 @app.errorhandler(Exception)
 def handle_exception(e):
-    # Pass through HTTP errors
+    # Pass through HTTP errors as JSON
     if isinstance(e, HTTPException):
-        return e
+        return jsonify({
+            "error": e.name,
+            "description": e.description
+        }), e.code
     return jsonify({"error": "An internal error occurred"}), 500
 
 # 🛡️ Sentinel: Add global security headers for defense in depth
