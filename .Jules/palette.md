@@ -9,3 +9,7 @@
 ## 2026-03-27 - Linking Tooltips to ARIA Labels for Sighted Users
 **Learning:** While `aria-label` effectively provides context to screen reader users about links opening in a new tab (e.g., "(opens in a new tab)"), mouse and keyboard-sighted users may not intuitively understand icon-only indicators like "↗". Adding a native `title="Opens in a new tab"` attribute to the link ensures all users, regardless of assistive technology, receive the same clarifying context on hover or focus without introducing new UI elements.
 **Action:** Whenever using icon-only indicators for external links with `aria-label` for screen readers, pair them with a `title` attribute so sighted users also benefit from the explanation seamlessly.
+
+## 2026-03-28 - Semantic Landmarks for List-like Content Blocks
+**Learning:** Generic list-like content blocks (e.g., repeating groups of images, titles, and descriptions) built with `<div>` are largely invisible structurally to screen reader users, who must wade through them sequentially. By converting these `<div>` wrappers into `<section>` elements and explicitly labeling them with `aria-labelledby` referencing their internal headings, we transform arbitrary blocks into discoverable and navigable landmark regions.
+**Action:** When creating repeating blocks of complex content (like article previews, artifact displays, or cards) that have internal headings, use `<section>` instead of `<div>` and tie the heading to the section via `aria-labelledby`.
