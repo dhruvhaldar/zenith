@@ -1,5 +1,5 @@
 import numpy as np
-from zenith.utils import h, c, k_B
+from zenith.utils import h, c, k_B, sigma_sb
 
 def planck_law(wavelength, temperature):
     """
@@ -69,5 +69,5 @@ def luminosity_from_radius_temp(radius, temperature):
     Returns:
         float: Luminosity in Watts.
     """
-    from zenith.utils import sigma_sb
+    # ⚡ Bolt: Moved sigma_sb import to top level to avoid repeated import overhead inside function
     return 4.0 * np.pi * radius**2 * sigma_sb * temperature**4
