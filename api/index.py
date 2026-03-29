@@ -37,6 +37,16 @@ def add_security_headers(response):
     response.headers['Content-Security-Policy'] = "default-src 'none'; frame-ancestors 'none'"
     return response
 
+# 🛡️ Sentinel: Helper to prevent DoS via very long strings in float() casting
+def safe_get_float(args, key, default):
+    val = args.get(key)
+    if val is None:
+        return default
+    if len(val) > 50:
+        raise ValueError(f"Input for {key} exceeds maximum length")
+    return float(val)
+
+
 @app.route('/')
 def home():
     return "Zenith Astronomy Toolkit API. Visit /api/snr or /api/transit for examples."
@@ -45,8 +55,8 @@ def home():
 def get_snr():
     try:
         # 🛡️ Sentinel: Input validation with reasonable boundaries to prevent DoS via huge values
-        mag = float(request.args.get('mag', 12.0))
-        exposure = float(request.args.get('exposure', 60.0))
+        mag = safe_get_float(request.args, 'mag', 12.0)
+        exposure = safe_get_float(request.args, 'exposure', 60.0)
 
         if not (-30 <= mag <= 50):
             return jsonify({"error": "Magnitude out of reasonable bounds (-30 to 50)"}), 400
@@ -70,7 +80,7 @@ def get_snr():
 def get_transit():
     try:
         # 🛡️ Sentinel: Input validation with limits
-        period = float(request.args.get('period', 4.0))
+        period = safe_get_float(request.args, 'period', 4.0)
         if not (0 < period <= 100000):
             return jsonify({"error": "Period must be between 0 and 100000 days"}), 400
     except ValueError:
@@ -88,7 +98,7 @@ def get_transit():
 def get_hubble():
     try:
         # 🛡️ Sentinel: Input validation with limits
-        d = float(request.args.get('d', 10.0))
+        d = safe_get_float(request.args, 'd', 10.0)
         if not (0 <= d <= 15000):
             return jsonify({"error": "Distance out of reasonable bounds (0 to 15000 Mpc)"}), 400
     except ValueError:
