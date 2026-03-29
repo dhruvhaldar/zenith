@@ -13,3 +13,7 @@
 ## 2026-03-28 - Semantic Landmarks for List-like Content Blocks
 **Learning:** Generic list-like content blocks (e.g., repeating groups of images, titles, and descriptions) built with `<div>` are largely invisible structurally to screen reader users, who must wade through them sequentially. By converting these `<div>` wrappers into `<section>` elements and explicitly labeling them with `aria-labelledby` referencing their internal headings, we transform arbitrary blocks into discoverable and navigable landmark regions.
 **Action:** When creating repeating blocks of complex content (like article previews, artifact displays, or cards) that have internal headings, use `<section>` instead of `<div>` and tie the heading to the section via `aria-labelledby`.
+
+## 2026-03-29 - Domain-Specific Abbreviations in ARIA Labels
+**Learning:** Technical abbreviations (like "SNR", "Mag", "Mpc") within link text or standard aria-labels are often mispronounced or spelled out letter-by-letter by screen readers, stripping the user of the intended context. Providing full, natural-language expansions in the `aria-label` attribute bridges this gap and ensures that domain-specific terminology is accessible to all.
+**Action:** When encountering domain-specific abbreviations in UI text, override the screen reader pronunciation by providing the expanded, natural-language version (e.g., "Signal-to-Noise Ratio" instead of "SNR") in the element's `aria-label`.
