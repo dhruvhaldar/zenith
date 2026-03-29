@@ -12,3 +12,8 @@
 **Vulnerability:** Passing through Werkzeug's HTTPExceptions in Flask returns default HTML error pages (e.g., for 404 or 405), which can lead to MIME-sniffing and potential reflected XSS if the CSP fails or is overly permissive in the future.
 **Learning:** Default error handlers in web frameworks often leak HTML templates even when the rest of the application is designed to be a JSON API.
 **Prevention:** Always explicitly capture HTTP errors in the global error handler and explicitly format them as JSON, rather than relying on the framework's default behavior.
+
+## 2026-03-29 - [DoS via Unbounded Input Length in Python Type Casting]
+**Vulnerability:** API query parameters were extracted and directly cast using `float(request.args.get('param'))` without checking the length of the incoming string. An attacker supplying extremely long strings (e.g. 50+ million characters) could cause the server to spend excessive CPU time and memory attempting to allocate, parse, and evaluate the type cast.
+**Learning:** Even built-in type casting functions like `float()` or `int()` in Python can become Denial of Service (DoS) vectors if the input string is arbitrarily long, due to the $O(n)$ or worse complexity of string parsing and internal memory allocations.
+**Prevention:** Always enforce a strict maximum length limit (e.g., `len(val) <= 50`) on string inputs before attempting to cast them to numeric types, ensuring the length matches practical application bounds.
