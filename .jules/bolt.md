@@ -11,3 +11,7 @@
 ## 2026-10-27 - Caching Expensive Integrations
 **Learning:** `scipy.integrate.quad` is computationally expensive and only accepts scalar inputs. Standard performance tweaks like vectorization don't work natively here. However, since the function is pure math, it's highly repetitive (e.g., standard parameters, common redshift grids).
 **Action:** Use Python's built-in `@lru_cache` from `functools` on wrapper functions around `scipy.integrate.quad` to bypass redundant numerical integration overhead.
+
+## 2026-03-30 - Negligible Speedups vs Downstream Overhead
+**Learning:** Avoid micro-optimizations that yield negligible absolute speedups (e.g., vectorizing a very small array of 50 elements) if the calculation time is immediately dwarfed by massive downstream overhead (e.g., synchronous `matplotlib.pyplot` calls). While technically "faster", the real-world impact is zero.
+**Action:** When finding a slow function, profile the ENTIRE function end-to-end to understand where the real time is spent. Do not optimize a 0.1ms computation if the 1.5s rendering step right next to it is the true bottleneck.

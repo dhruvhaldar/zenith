@@ -105,7 +105,8 @@ class Telescope:
         Plot SNR vs Magnitude for a fixed exposure time.
         """
         mags = np.linspace(mag_range[0], mag_range[1], 50)
-        snrs = [self.calculate_snr(m, exposure, ccd) for m in mags]
+        # ⚡ Bolt: Vectorized SNR calculation over magnitude array to avoid slow Python loop
+        snrs = self.calculate_snr(mags, exposure, ccd)
 
         plt.figure(figsize=(10, 6))
         plt.plot(mags, snrs, label=f"Exposure {exposure}s")
