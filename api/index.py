@@ -35,6 +35,10 @@ def add_security_headers(response):
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     # Prevent XSS and data injection attacks
     response.headers['Content-Security-Policy'] = "default-src 'none'; frame-ancestors 'none'"
+    # Prevent leaking information in the referer header
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    # Restrict access to browser features
+    response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
     return response
 
 # 🛡️ Sentinel: Helper to prevent DoS via very long strings in float() casting
@@ -49,7 +53,11 @@ def safe_get_float(args, key, default):
 
 @app.route('/')
 def home():
-    return "Zenith Astronomy Toolkit API. Visit /api/snr or /api/transit for examples."
+    # 🛡️ Sentinel: Enforce JSON response to prevent MIME sniffing and implicit text/html
+    return jsonify({
+        "message": "Zenith Astronomy Toolkit API",
+        "endpoints": ["/api/snr", "/api/transit", "/api/hubble"]
+    })
 
 @app.route('/api/snr')
 def get_snr():
