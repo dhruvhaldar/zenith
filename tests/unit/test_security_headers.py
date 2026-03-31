@@ -33,3 +33,19 @@ def test_security_headers_error_response(client):
     assert response.headers.get('X-Content-Type-Options') == 'nosniff'
     assert response.headers.get('Strict-Transport-Security') == 'max-age=31536000; includeSubDomains'
     assert response.headers.get('Content-Security-Policy') == "default-src 'none'; frame-ancestors 'none'"
+
+def test_security_headers_additional_headers(client):
+    """Test that additional security headers are applied to the root route."""
+    response = client.get('/')
+    assert response.status_code == 200
+    assert response.headers.get('Referrer-Policy') == 'strict-origin-when-cross-origin'
+    assert response.headers.get('Permissions-Policy') == 'geolocation=(), microphone=(), camera=()'
+
+def test_root_endpoint_json_response(client):
+    """Test that the root endpoint returns a valid JSON response."""
+    response = client.get('/')
+    assert response.status_code == 200
+    assert response.headers.get('Content-Type') == 'application/json'
+    data = response.get_json()
+    assert "message" in data
+    assert "endpoints" in data
