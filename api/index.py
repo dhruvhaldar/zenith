@@ -22,6 +22,10 @@ def handle_exception(e):
             "error": e.name,
             "description": e.description
         }), e.code
+
+    # 🛡️ Sentinel: Securely log unhandled exceptions internally to avoid silent failures
+    # while preventing stack trace exposure to the client.
+    app.logger.error(f"Unhandled Exception: {e}", exc_info=True)
     return jsonify({"error": "An internal error occurred"}), 500
 
 # 🛡️ Sentinel: Add global security headers for defense in depth
