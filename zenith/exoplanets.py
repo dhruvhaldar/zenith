@@ -46,7 +46,6 @@ class TransitSimulator:
         """
         t_half = duration_hours * 3600.0 / 2.0
         time = np.linspace(-t_half, t_half, points)
-        flux = np.ones_like(time)
 
         # Impact parameter b=0 (edge-on)
         # Distance from star center as function of time
@@ -59,17 +58,13 @@ class TransitSimulator:
 
         dist = np.abs(x)
 
-        # Full transit
-        full_transit = dist < (self.R_star - self.R_planet)
-        flux[full_transit] = 1.0 - self.depth
+        # ⚡ Bolt: Vectorized overlap calculation using np.clip to avoid expensive boolean masking
+        # Calculate overlap fraction for all points
+        overlap = (self.R_star + self.R_planet - dist) / (2 * self.R_planet)
+        # Clip to [0, 1] bounds (0 = no transit, 1 = full transit)
+        overlap = np.clip(overlap, 0.0, 1.0)
 
-        # Ingress/Egress
-        ingress_egress = (dist >= (self.R_star - self.R_planet)) & (dist <= (self.R_star + self.R_planet))
-        if np.any(ingress_egress):
-            # Simplified linear interpolation for "introductory" model
-            # Overlap fraction approx
-            overlap = (self.R_star + self.R_planet - dist[ingress_egress]) / (2 * self.R_planet)
-            flux[ingress_egress] = 1.0 - self.depth * overlap
+        flux = 1.0 - self.depth * overlap
 
         return time / 3600.0, flux
 

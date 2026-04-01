@@ -15,3 +15,7 @@
 ## 2026-03-30 - Negligible Speedups vs Downstream Overhead
 **Learning:** Avoid micro-optimizations that yield negligible absolute speedups (e.g., vectorizing a very small array of 50 elements) if the calculation time is immediately dwarfed by massive downstream overhead (e.g., synchronous `matplotlib.pyplot` calls). While technically "faster", the real-world impact is zero.
 **Action:** When finding a slow function, profile the ENTIRE function end-to-end to understand where the real time is spent. Do not optimize a 0.1ms computation if the 1.5s rendering step right next to it is the true bottleneck.
+
+## 2026-11-06 - Bounded Array Maths vs Boolean Masking
+**Learning:** In NumPy array processing, calculating boundaries continuously and applying `np.clip()` to bound physical values (like overlap fractions) is significantly faster (up to ~30%) and cleaner than creating large boolean arrays (like `full_transit` or `ingress_egress`), performing `np.any()`, and assigning conditionally. It minimizes array allocation overhead.
+**Action:** Replace multiple boolean mask conditions with continuous mathematical boundaries bounded by `np.clip()` when calculating piecewise functions in physics models.
