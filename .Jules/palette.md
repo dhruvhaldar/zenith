@@ -17,3 +17,7 @@
 ## 2026-03-29 - Domain-Specific Abbreviations in ARIA Labels
 **Learning:** Technical abbreviations (like "SNR", "Mag", "Mpc") within link text or standard aria-labels are often mispronounced or spelled out letter-by-letter by screen readers, stripping the user of the intended context. Providing full, natural-language expansions in the `aria-label` attribute bridges this gap and ensures that domain-specific terminology is accessible to all.
 **Action:** When encountering domain-specific abbreviations in UI text, override the screen reader pronunciation by providing the expanded, natural-language version (e.g., "Signal-to-Noise Ratio" instead of "SNR") in the element's `aria-label`.
+
+## 2026-04-01 - Link Color Contrast & Default Underlines (WCAG 1.4.1)
+**Learning:** Using only color (like `#0056b3`) to distinguish links from surrounding text (`#000000`) fails WCAG 1.4.1 (Use of Color) if the contrast ratio between the link and the text is less than 3:1. Because this specific color combination fails that ratio, the links must have an additional visual cue, such as a default underline, to ensure they are perceivable to users with color vision deficiencies.
+**Action:** Always ensure inline links have an underline by default unless the link color achieves at least a 3:1 contrast ratio with the surrounding body text AND has a distinct focus/hover state. Utilizing `text-decoration-thickness` and `text-underline-offset` allows for an aesthetically pleasing default underline.
