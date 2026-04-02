@@ -11,6 +11,9 @@ from zenith.cosmology import recession_velocity
 
 app = Flask(__name__)
 
+# 🛡️ Sentinel: Enforce a strict maximum request size (10 KB) to prevent DoS via massive payloads
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024
+
 from werkzeug.exceptions import HTTPException
 
 # 🛡️ Sentinel: Global error handler to prevent stack trace leakage and HTML injection
