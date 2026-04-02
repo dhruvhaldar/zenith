@@ -49,3 +49,34 @@ def test_root_endpoint_json_response(client):
     data = response.get_json()
     assert "message" in data
     assert "endpoints" in data
+
+def test_request_payload_too_large(client):
+    """Test that requests with a payload larger than MAX_CONTENT_LENGTH return 413."""
+    from flask import Flask, request, jsonify
+    from werkzeug.exceptions import HTTPException
+
+    # Create a new standalone test app to avoid modifying the main app after its first request
+    test_app = Flask(__name__)
+    test_app.config['MAX_CONTENT_LENGTH'] = app.config['MAX_CONTENT_LENGTH']
+    test_app.config['TESTING'] = True
+
+    # Register the same error handler as the main app
+    @test_app.errorhandler(Exception)
+    def handle_exception(e):
+        if isinstance(e, HTTPException):
+            return jsonify({"error": e.name, "description": e.description}), e.code
+        return jsonify({"error": "An internal error occurred"}), 500
+
+    @test_app.route('/_test_post', methods=['POST'])
+    def test_post():
+        _ = request.get_data()
+        return {"status": "ok"}
+
+    large_payload = "A" * (11 * 1024) # 11 KB payload
+
+    with test_app.test_client() as test_client:
+        response = test_client.post('/_test_post', data=large_payload)
+        assert response.status_code == 413
+        assert response.headers.get('Content-Type') == 'application/json'
+        data = response.get_json()
+        assert "error" in data
