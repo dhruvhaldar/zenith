@@ -14,6 +14,23 @@ app = Flask(__name__)
 # 🛡️ Sentinel: Enforce a strict maximum request size (10 KB) to prevent DoS via massive payloads
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024
 
+import logging
+
+class SanitizedFormatter(logging.Formatter):
+    """🛡️ Sentinel: Prevent Log Injection by stripping newlines from the entire log record, including traceback."""
+    def format(self, record):
+        formatted_message = super().format(record)
+        return formatted_message.replace('\n', '  |  ').replace('\r', '')
+
+if app.logger.handlers:
+    for handler in app.logger.handlers:
+        handler.setFormatter(SanitizedFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+else:
+    handler = logging.StreamHandler()
+    handler.setFormatter(SanitizedFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.INFO)
+
 from werkzeug.exceptions import HTTPException
 
 # 🛡️ Sentinel: Global error handler to prevent stack trace leakage and HTML injection
