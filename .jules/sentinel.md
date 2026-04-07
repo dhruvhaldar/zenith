@@ -27,3 +27,9 @@
 **Vulnerability:** Static frontend assets (HTML, images, JS) served by Vercel lacked basic security headers like `X-Frame-Options`, `Content-Security-Policy`, and `X-Content-Type-Options`. This exposed the frontend to clickjacking, MIME-sniffing, and potential XSS attacks.
 **Learning:** In Vercel serverless deployments, backend framework middleware (e.g., Flask's `@app.after_request`) only protects API routes explicitly routed to the serverless function. Static assets are served directly by Vercel's edge network and bypass the backend completely, leaving them unprotected.
 **Prevention:** Always configure global security headers in the deployment configuration file (e.g., `vercel.json`'s `headers` block) to ensure all routes, including static files, are properly protected, rather than relying solely on application-level middleware.
+
+## 2026-04-07 - [Log Injection Bypass via exc_info]
+**Vulnerability:** The exception message logged by `app.logger.error` could contain user-controlled newlines. Simply sanitizing the message string fails to prevent log injection because `exc_info=True` appends the full, unsanitized traceback containing the original string.
+**Learning:** In Python's `logging` module, `exc_info=True` renders the raw traceback independently of the main message string, exposing it to CRLF injection.
+**Prevention:** When mitigating Log Injection (CRLF) vulnerabilities, especially when `exc_info=True` is used, you must implement a custom `logging.Formatter` to strip newline characters (
+, ) from the entire formatted record.
