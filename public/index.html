@@ -15,6 +15,7 @@
         a:hover { text-decoration-thickness: 2px; color: #003d82; }
         a:focus-visible { outline: 3px solid #0056b3; outline-offset: 3px; border-radius: 2px; text-decoration-thickness: 2px; }
         abbr[title] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; }
+        abbr[title]:focus-visible { outline: 3px solid #0056b3; outline-offset: 3px; border-radius: 2px; }
         a abbr[title] { cursor: inherit; }
     </style>
 </head>
@@ -24,7 +25,7 @@
         <p>Welcome to Zenith, an engineering-focused astronomy toolkit.</p>
     </header>
     <main>
-        <h2>Live <abbr title="Application Programming Interface" aria-label="Application Programming Interface">API</abbr> Demo</h2>
+        <h2>Live <abbr title="Application Programming Interface" aria-label="Application Programming Interface" tabindex="0">API</abbr> Demo</h2>
         <ul>
             <li><a href="/api/snr?mag=12&exposure=60" target="_blank" rel="noopener noreferrer" aria-label="Calculate Signal-to-Noise Ratio for Magnitude 12 at 60 seconds (opens in a new tab)" title="Opens in a new tab">Calculate <abbr title="Signal-to-Noise Ratio">SNR</abbr> (<abbr title="Magnitude">Mag</abbr> 12, <abbr title="60 seconds">60s</abbr>) <span aria-hidden="true">↗</span></a></li>
             <li><a href="/api/transit?period=3.5" target="_blank" rel="noopener noreferrer" aria-label="Simulate Transit with a Period of 3.5 days (opens in a new tab)" title="Opens in a new tab">Simulate Transit (<abbr title="Period = 3.5 days">P=3.5d</abbr>) <span aria-hidden="true">↗</span></a></li>
@@ -34,7 +35,7 @@
         <h2>Generated Artifacts</h2>
 
         <section class="artifact" aria-labelledby="artifact-1-title">
-            <h3 id="artifact-1-title">1. Telescope Performance (<abbr aria-label="Signal-to-Noise Ratio" title="Signal-to-Noise Ratio">SNR</abbr>)</h3>
+            <h3 id="artifact-1-title">1. Telescope Performance (<abbr aria-label="Signal-to-Noise Ratio" title="Signal-to-Noise Ratio" tabindex="0">SNR</abbr>)</h3>
             <p>Signal-to-Noise Ratio vs Magnitude for an 8-inch telescope.</p>
             <!-- ⚡ Bolt: Added loading="lazy" to defer loading of offscreen images, improving initial page load time -->
             <img src="/assets/figure1.png" alt="Line graph showing Signal-to-Noise Ratio versus Apparent Magnitude for an 8-inch telescope. The Signal-to-Noise Ratio curve decreases exponentially as magnitude increases, with a red dashed line indicating the detection limit at a Signal-to-Noise Ratio of 5." loading="lazy">
