@@ -27,3 +27,6 @@
 ## 2026-04-07 - Abbreviation Tooltips Keyboard Accessibility
 **Learning:** Native `<abbr title="...">` elements provide helpful tooltips for mouse users on hover, but they are completely invisible to keyboard-only users who navigate via the Tab key, creating a hidden accessibility barrier. Adding a simple `tabindex="0"` along with clear `:focus-visible` outline styles ensures these elements enter the tab order and their titles become accessible.
 **Action:** When using standalone `<abbr>` tags to provide acronym definitions outside of already-focusable elements (like links), always include `tabindex="0"` and define `:focus-visible` styling so keyboard users can access the tooltips.
+## 2026-04-08 - Native Intra-page Navigation
+**Learning:** Using native HTML `<nav>` and in-page anchor links provides highly accessible semantic landmarks and "skip-to" navigation for screen-reader/keyboard users, entirely without custom CSS dependency or javascript.
+**Action:** Always implement semantic intra-page links (Table of Contents and Back to Top) on long static pages to immediately improve keyboard and screen-reader accessibility.
