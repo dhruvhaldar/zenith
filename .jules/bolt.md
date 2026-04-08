@@ -19,3 +19,10 @@
 ## 2026-11-06 - Bounded Array Maths vs Boolean Masking
 **Learning:** In NumPy array processing, calculating boundaries continuously and applying `np.clip()` to bound physical values (like overlap fractions) is significantly faster (up to ~30%) and cleaner than creating large boolean arrays (like `full_transit` or `ingress_egress`), performing `np.any()`, and assigning conditionally. It minimizes array allocation overhead.
 **Action:** Replace multiple boolean mask conditions with continuous mathematical boundaries bounded by `np.clip()` when calculating piecewise functions in physics models.
+## 2024-05-30 - Fast Integer Exponentiation in NumPy
+**Learning:** Using the generic power operator `**` on NumPy arrays (e.g., `array**5`) invokes NumPy's generic power function, which has significant overhead for small integer powers.
+**Action:** Replace small integer power calculations on arrays with explicit mathematical multiplication (e.g., `x2 = x * x; x5 = x2 * x2 * x`). This can be up to 4x faster for large arrays and avoids unnecessary overhead while maintaining readability.
+
+## 2024-05-30 - Numerical Stability with np.expm1
+**Learning:** When calculating `exp(x) - 1.0` for arrays, using NumPy's `np.expm1(x)` is slightly faster (combines operations) and provides significantly better numerical stability, particularly avoiding overflow/underflow warnings that `np.exp` might trigger before the subtraction.
+**Action:** Always replace `np.exp(x) - 1.0` with `np.expm1(x)` when writing scientific calculations in NumPy.
