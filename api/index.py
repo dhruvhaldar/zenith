@@ -63,6 +63,8 @@ def add_security_headers(response):
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     # Restrict access to browser features
     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+    # Prevent caching of dynamic API responses
+    response.headers['Cache-Control'] = 'no-store, max-age=0'
     return response
 
 # 🛡️ Sentinel: Helper to prevent DoS via very long strings in float() casting

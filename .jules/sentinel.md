@@ -33,3 +33,8 @@
 **Learning:** In Python's `logging` module, `exc_info=True` renders the raw traceback independently of the main message string, exposing it to CRLF injection.
 **Prevention:** When mitigating Log Injection (CRLF) vulnerabilities, especially when `exc_info=True` is used, you must implement a custom `logging.Formatter` to strip newline characters (
 , ) from the entire formatted record.
+
+## 2026-04-08 - [Missing Cache-Control Header in JSON APIs]
+**Vulnerability:** The API endpoints returned dynamic JSON responses without a `Cache-Control` header. While not containing explicitly personal data, the absence of this header allows browsers and intermediate proxies to cache the responses indefinitely, which could expose potentially sensitive calculations or error details over time.
+**Learning:** Even if an API doesn't seem to return highly sensitive personal data, allowing dynamic JSON responses to be cached by default is a poor defense-in-depth strategy that can lead to unintentional data exposure.
+**Prevention:** Always enforce `Cache-Control: no-store, max-age=0` in global security middleware for dynamic API endpoints to proactively prevent unwanted caching across all layers.
