@@ -17,9 +17,13 @@
         abbr[title] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; }
         abbr[title]:focus-visible { outline: 3px solid #0056b3; outline-offset: 3px; border-radius: 2px; }
         a abbr[title] { cursor: inherit; }
+        @media (prefers-reduced-motion: no-preference) {
+            html { scroll-behavior: smooth; }
+        }
+        [tabindex="-1"]:focus { outline: none; }
     </style>
 </head>
-<body id="top">
+<body id="top" tabindex="-1">
     <header>
         <h1>Zenith Astronomy Toolkit</h1>
         <p>Welcome to Zenith, an engineering-focused astronomy toolkit.</p>
@@ -32,14 +36,14 @@
             </ul>
         </nav>
 
-        <h2 id="api-demo">Live <abbr title="Application Programming Interface" aria-label="Application Programming Interface" tabindex="0">API</abbr> Demo</h2>
+        <h2 id="api-demo" tabindex="-1">Live <abbr title="Application Programming Interface" aria-label="Application Programming Interface" tabindex="0">API</abbr> Demo</h2>
         <ul>
             <li><a href="/api/snr?mag=12&exposure=60" target="_blank" rel="noopener noreferrer" aria-label="Calculate Signal-to-Noise Ratio for Magnitude 12 at 60 seconds (opens in a new tab)" title="Opens in a new tab">Calculate <abbr title="Signal-to-Noise Ratio">SNR</abbr> (<abbr title="Magnitude">Mag</abbr> 12, <abbr title="60 seconds">60s</abbr>) <span aria-hidden="true">↗</span></a></li>
             <li><a href="/api/transit?period=3.5" target="_blank" rel="noopener noreferrer" aria-label="Simulate Transit with a Period of 3.5 days (opens in a new tab)" title="Opens in a new tab">Simulate Transit (<abbr title="Period = 3.5 days">P=3.5d</abbr>) <span aria-hidden="true">↗</span></a></li>
             <li><a href="/api/hubble?d=100" target="_blank" rel="noopener noreferrer" aria-label="Hubble Recession Velocity at a distance of 100 Megaparsecs (opens in a new tab)" title="Opens in a new tab">Hubble Recession Velocity (<abbr title="distance = 100">d=100</abbr> <abbr title="Megaparsecs">Mpc</abbr>) <span aria-hidden="true">↗</span></a></li>
         </ul>
 
-        <h2 id="artifacts">Generated Artifacts</h2>
+        <h2 id="artifacts" tabindex="-1">Generated Artifacts</h2>
 
         <section class="artifact" aria-labelledby="artifact-1-title">
             <h3 id="artifact-1-title">1. Telescope Performance (<abbr aria-label="Signal-to-Noise Ratio" title="Signal-to-Noise Ratio" tabindex="0">SNR</abbr>)</h3>
