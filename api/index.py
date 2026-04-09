@@ -115,8 +115,10 @@ def get_transit():
     try:
         # 🛡️ Sentinel: Input validation with limits
         period = safe_get_float(request.args, 'period', 4.0)
-        if not (0 < period <= 100000):
-            return jsonify({"error": "Period must be between 0 and 100000 days"}), 400
+        # 🛡️ Sentinel: Enforce a practical lower bound to prevent float underflow
+        # which can bypass > 0 checks and cause ZeroDivisionErrors in transit calculations
+        if not (0.0001 <= period <= 100000):
+            return jsonify({"error": "Period must be between 0.0001 and 100000 days"}), 400
     except ValueError:
         return jsonify({"error": "Invalid input parameters"}), 400
 
