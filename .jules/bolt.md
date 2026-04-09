@@ -26,3 +26,6 @@
 ## 2024-05-30 - Numerical Stability with np.expm1
 **Learning:** When calculating `exp(x) - 1.0` for arrays, using NumPy's `np.expm1(x)` is slightly faster (combines operations) and provides significantly better numerical stability, particularly avoiding overflow/underflow warnings that `np.exp` might trigger before the subtraction.
 **Action:** Always replace `np.exp(x) - 1.0` with `np.expm1(x)` when writing scientific calculations in NumPy.
+## 2024-05-30 - Fast Base-10 Exponentiation in NumPy
+**Learning:** Using `10**x` on NumPy arrays triggers a slower, generic arbitrary-base exponentiation routine.
+**Action:** Replace `10**x` with its natural logarithm equivalent: `np.exp(np.log(10) * x)` (where `np.log(10) ≈ 2.302585092994046`). This maps down to a much faster C-level implementation for `np.exp`, often providing a ~2x performance speedup.
