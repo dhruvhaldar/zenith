@@ -30,3 +30,7 @@
 ## 2026-04-08 - Native Intra-page Navigation
 **Learning:** Using native HTML `<nav>` and in-page anchor links provides highly accessible semantic landmarks and "skip-to" navigation for screen-reader/keyboard users, entirely without custom CSS dependency or javascript.
 **Action:** Always implement semantic intra-page links (Table of Contents and Back to Top) on long static pages to immediately improve keyboard and screen-reader accessibility.
+
+## 2026-04-09 - Intra-Page Links and Target Element Focus
+**Learning:** Adding smooth scrolling (via `@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }`) provides crucial spatial context when using intra-page links (like a Table of Contents). However, clicking an anchor link only visually scrolls the page; it does not automatically move screen reader or keyboard focus to the target element if that element (like a `<body>` or `<h2>`) is not natively focusable. This leaves keyboard users stranded at the top of the page while visually they are at the bottom.
+**Action:** When implementing intra-page navigation (e.g., `<a href="#target">`), always add `tabindex="-1"` to the target element (e.g., `<h2 id="target" tabindex="-1">`) so that focus is correctly transferred without adding the element to the normal tab order. Additionally, remove the outline for these programmatically focused elements (via `[tabindex="-1"]:focus { outline: none; }`) to maintain a clean visual appearance for mouse users.
