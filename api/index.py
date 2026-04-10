@@ -67,14 +67,20 @@ def add_security_headers(response):
     response.headers['Cache-Control'] = 'no-store, max-age=0'
     return response
 
+import math
+
 # 🛡️ Sentinel: Helper to prevent DoS via very long strings in float() casting
+# Also prevents NaN/Inf injection which can bypass logic or cause mathematical errors downstream
 def safe_get_float(args, key, default):
     val = args.get(key)
     if val is None:
         return default
     if len(val) > 50:
         raise ValueError(f"Input for {key} exceeds maximum length")
-    return float(val)
+    parsed_val = float(val)
+    if math.isnan(parsed_val) or math.isinf(parsed_val):
+        raise ValueError(f"Input for {key} must be a finite number")
+    return parsed_val
 
 
 @app.route('/')
