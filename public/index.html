@@ -21,14 +21,17 @@
             html { scroll-behavior: smooth; }
         }
         [tabindex="-1"]:focus { outline: none; }
+        a[href="#main-content"] { position: absolute; left: -9999px; z-index: 999; }
+        a[href="#main-content"]:focus-visible { position: static; }
     </style>
 </head>
 <body id="top" tabindex="-1">
+    <a href="#main-content">Skip to main content</a>
     <header>
         <h1>Zenith Astronomy Toolkit</h1>
         <p>Welcome to Zenith, an engineering-focused astronomy toolkit.</p>
     </header>
-    <main>
+    <main id="main-content" tabindex="-1">
         <nav aria-label="Table of Contents">
             <ul>
                 <li><a href="#api-demo">Live API Demo</a></li>
