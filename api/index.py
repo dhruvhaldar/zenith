@@ -65,6 +65,9 @@ def add_security_headers(response):
     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
     # Prevent caching of dynamic API responses
     response.headers['Cache-Control'] = 'no-store, max-age=0'
+    # Prevent cross-origin information leaks
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
+    response.headers['Cross-Origin-Resource-Policy'] = 'same-origin'
     return response
 
 import math
