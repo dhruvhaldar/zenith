@@ -9,6 +9,8 @@
         body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
         h1 { color: #333; }
         .artifact { margin-bottom: 40px; }
+        figure { margin: 0; margin-top: 10px; }
+        figcaption { font-style: italic; color: #555; margin-top: 8px; font-size: 0.9em; }
         img { max-width: 100%; border: 1px solid #ddd; border-radius: 4px; }
         code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
         a { color: #0056b3; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; transition: color 0.2s ease, text-decoration-thickness 0.2s ease; }
@@ -50,23 +52,29 @@
 
         <section class="artifact" aria-labelledby="artifact-1-title">
             <h3 id="artifact-1-title">1. Telescope Performance (<abbr aria-label="Signal-to-Noise Ratio" title="Signal-to-Noise Ratio" tabindex="0">SNR</abbr>)</h3>
-            <p>Signal-to-Noise Ratio vs Magnitude for an 8-inch telescope.</p>
-            <!-- ⚡ Bolt: Added loading="lazy" to defer loading of offscreen images, improving initial page load time -->
-            <img src="/assets/figure1.png" alt="Line graph showing Signal-to-Noise Ratio versus Apparent Magnitude for an 8-inch telescope. The Signal-to-Noise Ratio curve decreases exponentially as magnitude increases, with a red dashed line indicating the detection limit at a Signal-to-Noise Ratio of 5." loading="lazy">
+            <figure>
+                <!-- ⚡ Bolt: Added loading="lazy" to defer loading of offscreen images, improving initial page load time -->
+                <img src="/assets/figure1.png" alt="Line graph showing Signal-to-Noise Ratio versus Apparent Magnitude for an 8-inch telescope. The Signal-to-Noise Ratio curve decreases exponentially as magnitude increases, with a red dashed line indicating the detection limit at a Signal-to-Noise Ratio of 5." loading="lazy">
+                <figcaption>Signal-to-Noise Ratio vs Magnitude for an 8-inch telescope.</figcaption>
+            </figure>
         </section>
 
         <section class="artifact" aria-labelledby="artifact-2-title">
             <h3 id="artifact-2-title">2. Exoplanet Transit Light Curve</h3>
-            <p>Simulated light curve of a Hot Jupiter transiting a Sun-like star.</p>
-            <!-- ⚡ Bolt: Added loading="lazy" to defer loading of offscreen images, improving initial page load time -->
-            <img src="/assets/figure2.png" alt="Graph showing a simulated exoplanet transit light curve with a normalized flux dip at 0 hours, representing a Hot Jupiter transiting a Sun-like star." loading="lazy">
+            <figure>
+                <!-- ⚡ Bolt: Added loading="lazy" to defer loading of offscreen images, improving initial page load time -->
+                <img src="/assets/figure2.png" alt="Graph showing a simulated exoplanet transit light curve with a normalized flux dip at 0 hours, representing a Hot Jupiter transiting a Sun-like star." loading="lazy">
+                <figcaption>Simulated light curve of a Hot Jupiter transiting a Sun-like star.</figcaption>
+            </figure>
         </section>
 
         <section class="artifact" aria-labelledby="artifact-3-title">
             <h3 id="artifact-3-title">3. Visibility Plot</h3>
-            <p>Altitude of Sirius over time from Stockholm.</p>
-            <!-- ⚡ Bolt: Added loading="lazy" to defer loading of offscreen images, improving initial page load time -->
-            <img src="/assets/figure3.png" alt="Line graph plotting the altitude of Sirius from Stockholm over time. The curve shows the star rising above the horizon, reaching a peak altitude of around 15 degrees, and setting, remaining below the airmass limit of 30 degrees." loading="lazy">
+            <figure>
+                <!-- ⚡ Bolt: Added loading="lazy" to defer loading of offscreen images, improving initial page load time -->
+                <img src="/assets/figure3.png" alt="Line graph plotting the altitude of Sirius from Stockholm over time. The curve shows the star rising above the horizon, reaching a peak altitude of around 15 degrees, and setting, remaining below the airmass limit of 30 degrees." loading="lazy">
+                <figcaption>Altitude of Sirius over time from Stockholm.</figcaption>
+            </figure>
         </section>
 
     </main>

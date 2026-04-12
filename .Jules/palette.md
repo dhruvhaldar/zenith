@@ -38,3 +38,7 @@
 ## 2026-04-10 - Skip to Content Links
 **Learning:** For keyboard and screen reader users, navigating past repeated header and navigation elements on every page reload is tedious. Adding a "Skip to main content" link at the very top of the document provides a direct mechanism to bypass this. When operating within strict classless constraints, these can be effectively hidden visually (but kept accessible) using attribute selectors like `a[href="#main-content"]` combined with `position: absolute; left: -9999px;` and revealed on focus with `:focus-visible`.
 **Action:** Always implement a skip-to-content link as the very first interactive element in the `<body>` on any page with a header/navigation, and ensure the target `<main>` element has `tabindex="-1"` so it properly receives focus when the link is activated.
+
+## 2026-04-12 - Semantic Image Captions with Figure and Figcaption
+**Learning:** Using generic `<p>` tags below an `<img>` tag to provide a caption leaves the description semantically detached from the image for assistive technologies. Wrapping both elements in `<figure>` and `<figcaption>` natively groups them, ensuring screen readers and other assistive tools announce the image and its caption together as a unified piece of content.
+**Action:** When displaying artifacts, diagrams, or meaningful images accompanied by descriptive text, always encapsulate them within `<figure>` and `<figcaption>` tags instead of relying on loose proximity with `<p>` tags.
