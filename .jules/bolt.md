@@ -33,3 +33,7 @@
 ## 2024-05-30 - Fast Base-10 Logarithm in NumPy
 **Learning:** Using `np.log10(x)` on NumPy arrays is slower than using the natural logarithm `np.log(x)` multiplied by a constant factor, because `np.log` maps directly to highly-optimized C-level routines.
 **Action:** Replace `np.log10(x)` with its natural logarithm equivalent: `np.log(x) / np.log(10)`. When calculating `C * np.log10(x)`, precalculate `C / np.log(10)` (where `np.log(10) ≈ 2.302585092994046`). This provides roughly a 30% speedup for array calculations.
+
+## 2026-11-12 - Fast Integer Exponentiation inside quad Integrands
+**Learning:** Python's generic power operator (`**`) carries overhead even for small integer powers. When used inside tight numerical integration loops (like `scipy.integrate.quad` integrands), this overhead multiplies drastically.
+**Action:** Unroll small integer powers (e.g., `x**3`) to explicit multiplication (e.g., `x * x * x`) inside performance-critical functions and loops, especially `quad` integrands.
