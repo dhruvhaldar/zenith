@@ -25,6 +25,17 @@
         [tabindex="-1"]:focus { outline: none; }
         a[href="#main-content"] { position: absolute; left: -9999px; z-index: 999; }
         a[href="#main-content"]:focus-visible { position: static; }
+
+        /* Target Highlight Animation */
+        @keyframes target-highlight {
+            0% { background-color: transparent; }
+            30% { background-color: rgba(255, 215, 0, 0.4); }
+            100% { background-color: transparent; }
+        }
+        :target {
+            animation: target-highlight 2s ease-out;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body id="top" tabindex="-1">
