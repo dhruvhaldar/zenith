@@ -37,3 +37,7 @@
 ## 2026-11-12 - Fast Integer Exponentiation inside quad Integrands
 **Learning:** Python's generic power operator (`**`) carries overhead even for small integer powers. When used inside tight numerical integration loops (like `scipy.integrate.quad` integrands), this overhead multiplies drastically.
 **Action:** Unroll small integer powers (e.g., `x**3`) to explicit multiplication (e.g., `x * x * x`) inside performance-critical functions and loops, especially `quad` integrands.
+
+## 2026-12-05 - Array-Scalar Addition Optimization
+**Learning:** When performing multiple additions on a NumPy array with scalar values inside a loop or function (e.g., `array + scalar1 + scalar2 + scalar3`), each operation creates a new intermediate array. This requires multiple passes of memory allocation and iteration over the array.
+**Action:** Combine all scalar terms into a single constant before adding them to the array (e.g., `constant = scalar1 + scalar2 + scalar3; result = array + constant`). This reduces the number of array additions to just one, saving memory bandwidth and execution time.
