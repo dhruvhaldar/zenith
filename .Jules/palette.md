@@ -42,3 +42,7 @@
 ## 2026-04-12 - Semantic Image Captions with Figure and Figcaption
 **Learning:** Using generic `<p>` tags below an `<img>` tag to provide a caption leaves the description semantically detached from the image for assistive technologies. Wrapping both elements in `<figure>` and `<figcaption>` natively groups them, ensuring screen readers and other assistive tools announce the image and its caption together as a unified piece of content.
 **Action:** When displaying artifacts, diagrams, or meaningful images accompanied by descriptive text, always encapsulate them within `<figure>` and `<figcaption>` tags instead of relying on loose proximity with `<p>` tags.
+
+## 2026-04-13 - Target Highlight Animations for Intra-Page Navigation
+**Learning:** Even with smooth scrolling and proper focus management, jumping to an intra-page link (like a Table of Contents entry) can leave users momentarily disoriented, particularly on text-heavy pages or if the target is near the bottom and doesn't align to the top edge. Providing a brief, non-intrusive background flash on the destination element helps the eye immediately locate the new point of interest.
+**Action:** When implementing intra-page navigation, utilize the `:target` CSS pseudo-class paired with a subtle, fading background-color `@keyframes` animation. This enhances spatial context and cognitive ease without requiring JavaScript.
