@@ -80,7 +80,8 @@ class Telescope:
         # Pixel scale in arcsec/pixel
         pixel_scale = 206265 * (ccd.pixel_size / self.focal_length)
         # Area of a pixel in arcsec^2
-        pixel_area_arcsec = pixel_scale**2
+        # ⚡ Bolt: Use explicit multiplication to avoid small integer power overhead
+        pixel_area_arcsec = pixel_scale * pixel_scale
         # Photons from sky per pixel
         photons_sky_pixel = flux_sky_arcsec * self.area * exposure * ccd.qe * pixel_area_arcsec
         # Assuming star light is concentrated in a certain number of pixels (aperture photometry)
@@ -95,10 +96,13 @@ class Telescope:
         dark_electrons = ccd.dark_current * exposure * n_pixels
 
         # d. Read Noise
-        read_noise_electrons = ccd.read_noise**2 * n_pixels
+        # ⚡ Bolt: Use explicit multiplication
+        read_noise_electrons = (ccd.read_noise * ccd.read_noise) * n_pixels
 
         # Total Noise
-        noise = np.sqrt(photons_target + total_sky_photons + dark_electrons + read_noise_electrons)
+        # ⚡ Bolt: Combine scalar constant noise terms before array addition to avoid redundant array iterations
+        constant_noise = total_sky_photons + dark_electrons + read_noise_electrons
+        noise = np.sqrt(photons_target + constant_noise)
 
         return photons_target / noise
 
