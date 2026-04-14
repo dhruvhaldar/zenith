@@ -41,3 +41,6 @@
 ## 2026-12-05 - Array-Scalar Addition Optimization
 **Learning:** When performing multiple additions on a NumPy array with scalar values inside a loop or function (e.g., `array + scalar1 + scalar2 + scalar3`), each operation creates a new intermediate array. This requires multiple passes of memory allocation and iteration over the array.
 **Action:** Combine all scalar terms into a single constant before adding them to the array (e.g., `constant = scalar1 + scalar2 + scalar3; result = array + constant`). This reduces the number of array additions to just one, saving memory bandwidth and execution time.
+## 2024-05-30 - Array-Scalar Multiplication Optimization
+**Learning:** When multiplying a NumPy array by multiple scalar values (e.g., `array * scalar1 * scalar2 * scalar3`), executing it left-to-right creates multiple intermediate array allocations. This requires redundant passes of memory allocation and iteration over the array.
+**Action:** Combine all scalar terms into a single constant with parentheses before multiplying with the array (e.g., `array * (scalar1 * scalar2 * scalar3)`). This reduces the number of array multiplications to just one, saving memory bandwidth and execution time.
