@@ -24,7 +24,15 @@
         }
         [tabindex="-1"]:focus { outline: none; }
         a[href="#main-content"] { position: absolute; left: -9999px; z-index: 999; }
-        a[href="#main-content"]:focus-visible { position: static; }
+        a[href="#main-content"]:focus-visible {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 10px;
+            border: 2px solid #0056b3;
+            border-radius: 4px;
+        }
 
         /* Target Highlight Animation */
         @keyframes target-highlight {
@@ -32,7 +40,7 @@
             30% { background-color: rgba(255, 215, 0, 0.4); }
             100% { background-color: transparent; }
         }
-        :target {
+        :target:not(body) {
             animation: target-highlight 2s ease-out;
             border-radius: 4px;
         }

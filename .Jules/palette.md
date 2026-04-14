@@ -46,3 +46,11 @@
 ## 2026-04-13 - Target Highlight Animations for Intra-Page Navigation
 **Learning:** Even with smooth scrolling and proper focus management, jumping to an intra-page link (like a Table of Contents entry) can leave users momentarily disoriented, particularly on text-heavy pages or if the target is near the bottom and doesn't align to the top edge. Providing a brief, non-intrusive background flash on the destination element helps the eye immediately locate the new point of interest.
 **Action:** When implementing intra-page navigation, utilize the `:target` CSS pseudo-class paired with a subtle, fading background-color `@keyframes` animation. This enhances spatial context and cognitive ease without requiring JavaScript.
+
+## 2026-04-14 - Target Highlights and Body Elements
+**Learning:** Indiscriminately styling the `:target` pseudo-class can cause massive visual disruption (like full-screen flashing) if the target of an intra-page link (like a 'Back to top' link) is the document `body` or `html`.
+**Action:** Always restrict `:target` styling using `:not(body)` or specifically target semantic content elements to avoid jarring UX.
+
+## 2026-04-14 - Skip Link Layout Shifts
+**Learning:** Revealing hidden accessibility links (like skip-to-content) by switching them from `position: absolute` to `position: static` on focus causes undesirable layout shifts, abruptly pushing the rest of the page down.
+**Action:** Keep hidden accessibility links `position: absolute` when focused, instead adjusting `top`/`left` properties and adding background/padding to display them as a clean overlay.
