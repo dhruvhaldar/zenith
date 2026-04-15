@@ -37,6 +37,10 @@
                 {
                     "key": "Cross-Origin-Resource-Policy",
                     "value": "same-origin"
+                },
+                {
+                    "key": "Server",
+                    "value": "Zenith API"
                 }
             ]
         }

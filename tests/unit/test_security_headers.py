@@ -43,6 +43,7 @@ def test_security_headers_additional_headers(client):
     assert response.headers.get('Cache-Control') == 'no-store, max-age=0'
     assert response.headers.get('Cross-Origin-Opener-Policy') == 'same-origin'
     assert response.headers.get('Cross-Origin-Resource-Policy') == 'same-origin'
+    assert response.headers.get('Server') == 'Zenith API'
 
 def test_root_endpoint_json_response(client):
     """Test that the root endpoint returns a valid JSON response."""
