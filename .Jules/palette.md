@@ -54,3 +54,7 @@
 ## 2026-04-14 - Skip Link Layout Shifts
 **Learning:** Revealing hidden accessibility links (like skip-to-content) by switching them from `position: absolute` to `position: static` on focus causes undesirable layout shifts, abruptly pushing the rest of the page down.
 **Action:** Keep hidden accessibility links `position: absolute` when focused, instead adjusting `top`/`left` properties and adding background/padding to display them as a clean overlay.
+
+## 2026-04-15 - Orphaned External Link Icons on Mobile
+**Learning:** Using regular spaces between link text and external link indicator icons (like `↗`) can lead to the icon dangerously wrapping to a new line by itself on constrained mobile viewports. This creates an awkward "orphaned" visual artifact that breaks the connection between the icon and the text.
+**Action:** When appending indicator icons to text elements, particularly external link indicators, use a non-breaking space (`&nbsp;`) instead of a regular space (e.g., `Link Text&nbsp;<span aria-hidden="true">↗</span>`). This binds the icon to the last word, ensuring they wrap together as a unified block and maintain visual polish across all device widths.
