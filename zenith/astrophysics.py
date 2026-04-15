@@ -50,9 +50,9 @@ def distance_modulus(m, M):
         float: Distance in parsecs.
     """
     # m - M = 5 * log10(d) - 5
-    exponent = (m - M + 5.0) / 5.0
-    # ⚡ Bolt: Fast array exponentiation (10**x -> np.exp(ln(10) * x)) provides ~2x speedup
-    return np.exp(2.302585092994046 * exponent)
+    # ⚡ Bolt: Fast array exponentiation (10**x -> np.exp(ln(10) * x))
+    # ⚡ Bolt: Combined scalar constants (2.302585092994046 / 5.0 = 0.4605170185988092) to avoid multiple intermediate array allocations
+    return np.exp(0.4605170185988092 * (m - M + 5.0))
 
 def absolute_magnitude(m, d):
     """

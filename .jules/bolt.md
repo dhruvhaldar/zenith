@@ -44,3 +44,6 @@
 ## 2024-05-30 - Array-Scalar Multiplication Optimization
 **Learning:** When multiplying a NumPy array by multiple scalar values (e.g., `array * scalar1 * scalar2 * scalar3`), executing it left-to-right creates multiple intermediate array allocations. This requires redundant passes of memory allocation and iteration over the array.
 **Action:** Combine all scalar terms into a single constant with parentheses before multiplying with the array (e.g., `array * (scalar1 * scalar2 * scalar3)`). This reduces the number of array multiplications to just one, saving memory bandwidth and execution time.
+## 2024-05-30 - Mathematical Simplification to Minimize Array Allocation
+**Learning:** When performing mathematical operations involving multiple scalar constants and an array (e.g., `C1 * ((array + C2) / C3)`), evaluating it sequentially creates multiple intermediate array allocations.
+**Action:** Mathematically expand and combine all scalar terms into a single constant where possible before applying them to the array (e.g., `(C1 / C3) * (array + C2)`). This significantly reduces intermediate array creation overhead, saving execution time and memory bandwidth.
