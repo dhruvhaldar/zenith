@@ -87,4 +87,6 @@ def luminosity_from_radius_temp(radius, temperature):
     r2 = radius * radius
     t2 = temperature * temperature
     t4 = t2 * t2
-    return 4.0 * np.pi * r2 * sigma_sb * t4
+    # ⚡ Bolt: Group scalar variables into a single constant before array multiplication
+    # to avoid creating redundant intermediate arrays.
+    return (4.0 * np.pi * sigma_sb) * (r2 * t4)
