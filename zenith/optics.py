@@ -64,28 +64,26 @@ class Telescope:
         ZERO_MAG_FLUX = 1.0e10
 
         # 1. Calculate Signal (S)
-        # Flux from target
-        # ⚡ Bolt: Fast array exponentiation (10**x -> np.exp(ln(10) * x)) provides ~2x speedup
-        flux_target = ZERO_MAG_FLUX * np.exp(-0.9210340371976183 * target_mag)
+        # ⚡ Bolt: Group scalar constants to avoid creating intermediate array `flux_target`
+        target_factor = ZERO_MAG_FLUX * (self.area * exposure * ccd.qe)
         # Photons hitting the detector
-        # ⚡ Bolt: Grouped scalar variables to calculate a constant factor before array multiplication to avoid creating intermediate arrays
-        photons_target = flux_target * (self.area * exposure * ccd.qe)
+        # ⚡ Bolt: Fast array exponentiation (10**x -> np.exp(ln(10) * x)) provides ~2x speedup
+        photons_target = target_factor * np.exp(-0.9210340371976183 * target_mag)
 
         # 2. Calculate Noise
         # a. Shot noise from target (sqrt(S))
 
         # b. Sky Background
-        # Sky flux per arcsec^2
-        # ⚡ Bolt: Fast array exponentiation
-        flux_sky_arcsec = ZERO_MAG_FLUX * np.exp(-0.9210340371976183 * sky_mag)
         # Pixel scale in arcsec/pixel
         pixel_scale = 206265 * (ccd.pixel_size / self.focal_length)
         # Area of a pixel in arcsec^2
         # ⚡ Bolt: Use explicit multiplication to avoid small integer power overhead
         pixel_area_arcsec = pixel_scale * pixel_scale
+        # ⚡ Bolt: Group scalar constants to avoid creating intermediate array `flux_sky_arcsec`
+        sky_factor = ZERO_MAG_FLUX * (self.area * exposure * ccd.qe * pixel_area_arcsec)
         # Photons from sky per pixel
-        # ⚡ Bolt: Grouped scalar variables to calculate a constant factor before array multiplication to avoid creating intermediate arrays
-        photons_sky_pixel = flux_sky_arcsec * (self.area * exposure * ccd.qe * pixel_area_arcsec)
+        # ⚡ Bolt: Fast array exponentiation
+        photons_sky_pixel = sky_factor * np.exp(-0.9210340371976183 * sky_mag)
         # Assuming star light is concentrated in a certain number of pixels (aperture photometry)
         # Let's assume a seeing disk of roughly 2 arcsec diameter, area ~ pi*1^2 = 3.14 arcsec^2
         # Number of pixels for aperture
