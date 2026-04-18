@@ -83,9 +83,14 @@ import math
 # 🛡️ Sentinel: Helper to prevent DoS via very long strings in float() casting
 # Also prevents NaN/Inf injection which can bypass logic or cause mathematical errors downstream
 def safe_get_float(args, key, default):
-    val = args.get(key)
-    if val is None:
+    # 🛡️ Sentinel: Prevent HTTP Parameter Pollution (HPP) by rejecting multiple values
+    vals = args.getlist(key)
+    if not vals:
         return default
+    if len(vals) > 1:
+        raise ValueError(f"Multiple values provided for {key}, which is not allowed")
+
+    val = vals[0]
     if len(val) > 50:
         raise ValueError(f"Input for {key} exceeds maximum length")
     parsed_val = float(val)
