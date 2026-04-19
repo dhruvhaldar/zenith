@@ -58,3 +58,7 @@
 ## 2026-04-15 - Orphaned External Link Icons on Mobile
 **Learning:** Using regular spaces between link text and external link indicator icons (like `↗`) can lead to the icon dangerously wrapping to a new line by itself on constrained mobile viewports. This creates an awkward "orphaned" visual artifact that breaks the connection between the icon and the text.
 **Action:** When appending indicator icons to text elements, particularly external link indicators, use a non-breaking space (`&nbsp;`) instead of a regular space (e.g., `Link Text&nbsp;<span aria-hidden="true">↗</span>`). This binds the icon to the last word, ensuring they wrap together as a unified block and maintain visual polish across all device widths.
+
+## 2026-04-16 - Hiding Visual Separators from Screen Readers
+**Learning:** Using non-semantic text characters like `|`, `•`, or `-` purely for visual separation (e.g., in footers or breadcrumbs) creates auditory clutter for screen reader users, as these characters are often announced aloud.
+**Action:** Always wrap non-semantic visual separator characters in an inline element (like `<span>`) and apply `aria-hidden="true"`. This explicitly hides the separator from assistive technologies while allowing it to remain visible to sighted users.
