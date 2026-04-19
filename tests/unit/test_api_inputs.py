@@ -1,34 +1,40 @@
 import pytest
+from werkzeug.datastructures import MultiDict
 from api.index import app, safe_get_float
 
 def test_safe_get_float_valid():
     """Test that valid floats are accepted."""
-    assert safe_get_float({'val': '12.5'}, 'val', 0.0) == 12.5
-    assert safe_get_float({'val': '-12.5'}, 'val', 0.0) == -12.5
-    assert safe_get_float({'val': '0'}, 'val', 0.0) == 0.0
+    assert safe_get_float(MultiDict([('val', '12.5')]), 'val', 0.0) == 12.5
+    assert safe_get_float(MultiDict([('val', '-12.5')]), 'val', 0.0) == -12.5
+    assert safe_get_float(MultiDict([('val', '0')]), 'val', 0.0) == 0.0
 
 def test_safe_get_float_nan():
     """Test that NaN is rejected."""
     with pytest.raises(ValueError, match="must be a finite number"):
-        safe_get_float({'val': 'nan'}, 'val', 0.0)
+        safe_get_float(MultiDict([('val', 'nan')]), 'val', 0.0)
     with pytest.raises(ValueError, match="must be a finite number"):
-        safe_get_float({'val': 'NaN'}, 'val', 0.0)
+        safe_get_float(MultiDict([('val', 'NaN')]), 'val', 0.0)
 
 def test_safe_get_float_inf():
     """Test that Infinity is rejected."""
     with pytest.raises(ValueError, match="must be a finite number"):
-        safe_get_float({'val': 'inf'}, 'val', 0.0)
+        safe_get_float(MultiDict([('val', 'inf')]), 'val', 0.0)
     with pytest.raises(ValueError, match="must be a finite number"):
-        safe_get_float({'val': 'infinity'}, 'val', 0.0)
+        safe_get_float(MultiDict([('val', 'infinity')]), 'val', 0.0)
     with pytest.raises(ValueError, match="must be a finite number"):
-        safe_get_float({'val': '-inf'}, 'val', 0.0)
+        safe_get_float(MultiDict([('val', '-inf')]), 'val', 0.0)
     with pytest.raises(ValueError, match="must be a finite number"):
-        safe_get_float({'val': '-Infinity'}, 'val', 0.0)
+        safe_get_float(MultiDict([('val', '-Infinity')]), 'val', 0.0)
 
 def test_safe_get_float_too_long():
     """Test that overly long strings are rejected."""
     with pytest.raises(ValueError, match="exceeds maximum length"):
-        safe_get_float({'val': '1' * 51}, 'val', 0.0)
+        safe_get_float(MultiDict([('val', '1' * 51)]), 'val', 0.0)
+
+def test_safe_get_float_hpp():
+    """Test that multiple values for the same key are rejected (HPP prevention)."""
+    with pytest.raises(ValueError, match="Multiple values provided"):
+        safe_get_float(MultiDict([('val', '10.0'), ('val', '20.0')]), 'val', 0.0)
 
 @pytest.fixture
 def client():
@@ -47,5 +53,11 @@ def test_api_rejects_nan_inf(client):
     assert response.get_json()['error'] == "Invalid input parameters"
 
     response = client.get('/api/hubble?d=-infinity')
+    assert response.status_code == 400
+    assert response.get_json()['error'] == "Invalid input parameters"
+
+def test_api_rejects_hpp(client):
+    """Test that the API endpoints return 400 for duplicate parameters (HPP prevention)."""
+    response = client.get('/api/snr?mag=10&mag=20')
     assert response.status_code == 400
     assert response.get_json()['error'] == "Invalid input parameters"
