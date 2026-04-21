@@ -58,3 +58,7 @@
 ## 2026-04-15 - Orphaned External Link Icons on Mobile
 **Learning:** Using regular spaces between link text and external link indicator icons (like `↗`) can lead to the icon dangerously wrapping to a new line by itself on constrained mobile viewports. This creates an awkward "orphaned" visual artifact that breaks the connection between the icon and the text.
 **Action:** When appending indicator icons to text elements, particularly external link indicators, use a non-breaking space (`&nbsp;`) instead of a regular space (e.g., `Link Text&nbsp;<span aria-hidden="true">↗</span>`). This binds the icon to the last word, ensuring they wrap together as a unified block and maintain visual polish across all device widths.
+
+## 2026-04-21 - Explicit API Endpoint Documentation
+**Learning:** Providing interactive API demo links is helpful, but if users have to hover over or click the link to discover the actual endpoint URL and HTTP method, it slows down developer exploration. Displaying the endpoint structure and HTTP method (e.g., `GET /api/...`) explicitly in text or `<code>` blocks on the UI provides immediate, transparent documentation, significantly improving the developer experience.
+**Action:** When providing interactive API demo links, always explicitly display the endpoint structure and HTTP method directly on the UI using `<code>` blocks to improve developer experience and transparency.
