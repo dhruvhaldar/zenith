@@ -60,9 +60,9 @@ class TransitSimulator:
 
         # ⚡ Bolt: Vectorized overlap calculation using np.clip to avoid expensive boolean masking
         # Calculate overlap fraction for all points
-        overlap = (self.R_star + self.R_planet - dist) / (2 * self.R_planet)
-        # Clip to [0, 1] bounds (0 = no transit, 1 = full transit)
-        overlap = np.clip(overlap, 0.0, 1.0)
+        # ⚡ Bolt: Applying np.clip inline reduces array processing overhead and avoids intermediate arrays
+        inv_2R = 1.0 / (2 * self.R_planet)
+        overlap = np.clip((self.R_star + self.R_planet - dist) * inv_2R, 0.0, 1.0)
 
         flux = 1.0 - self.depth * overlap
 
