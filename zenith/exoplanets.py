@@ -49,20 +49,18 @@ class TransitSimulator:
 
         # Impact parameter b=0 (edge-on)
         # Distance from star center as function of time
-        # x(t) = v * t
-        x = self.v_orb * time
-
         # Simple geometric overlap model (uniform disk star)
         # If |x| < R_star + R_planet: partial or full transit
         # If |x| < R_star - R_planet: full transit
-
-        dist = np.abs(x)
 
         # ⚡ Bolt: Vectorized overlap calculation using np.clip to avoid expensive boolean masking
         # Calculate overlap fraction for all points
         # ⚡ Bolt: Applying np.clip inline reduces array processing overhead and avoids intermediate arrays
         inv_2R = 1.0 / (2 * self.R_planet)
-        overlap = np.clip((self.R_star + self.R_planet - dist) * inv_2R, 0.0, 1.0)
+        # ⚡ Bolt: Mathematically expand and combine scalar terms to avoid intermediate array allocations
+        c1 = (self.R_star + self.R_planet) * inv_2R
+        c2 = self.v_orb * inv_2R
+        overlap = np.clip(c1 - np.abs(time) * c2, 0.0, 1.0)
 
         flux = 1.0 - self.depth * overlap
 
