@@ -44,8 +44,8 @@ class TransitSimulator:
         Returns:
             tuple: (time_hours, normalized_flux)
         """
-        t_half = duration_hours * 3600.0 / 2.0
-        time = np.linspace(-t_half, t_half, points)
+        t_half_hours = duration_hours / 2.0
+        time_hours = np.linspace(-t_half_hours, t_half_hours, points)
 
         # Impact parameter b=0 (edge-on)
         # Distance from star center as function of time
@@ -59,12 +59,13 @@ class TransitSimulator:
         inv_2R = 1.0 / (2 * self.R_planet)
         # ⚡ Bolt: Mathematically expand and combine scalar terms to avoid intermediate array allocations
         c1 = (self.R_star + self.R_planet) * inv_2R
-        c2 = self.v_orb * inv_2R
-        overlap = np.clip(c1 - np.abs(time) * c2, 0.0, 1.0)
+        # ⚡ Bolt: Factor the 3600.0 scalar into c2 to calculate directly in hours, preventing a final array division allocation
+        c2 = self.v_orb * inv_2R * 3600.0
+        overlap = np.clip(c1 - np.abs(time_hours) * c2, 0.0, 1.0)
 
         flux = 1.0 - self.depth * overlap
 
-        return time / 3600.0, flux
+        return time_hours, flux
 
     def plot_light_curve(self, duration_hours=6, filename="transit_light_curve.png"):
         """
