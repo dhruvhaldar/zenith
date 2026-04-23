@@ -44,8 +44,9 @@ def handle_exception(e):
         }), e.code
 
     # 🛡️ Sentinel: Securely log unhandled exceptions internally to avoid silent failures
-    # while preventing stack trace exposure to the client.
-    app.logger.error(f"Unhandled Exception: {e}", exc_info=True)
+    # while preventing stack trace exposure to the client. Include request context for security auditing.
+    client_ip = request.remote_addr or "Unknown IP"
+    app.logger.error(f"Unhandled Exception on {request.method} {request.path} from {client_ip}: {e}", exc_info=True)
     return jsonify({"error": "An internal error occurred"}), 500
 
 # 🛡️ Sentinel: Add global security headers for defense in depth

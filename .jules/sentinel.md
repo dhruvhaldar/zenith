@@ -69,3 +69,8 @@
 **Vulnerability:** HTTP Parameter Pollution (HPP) in `request.args.get(key)`.
 **Learning:** `request.args.get(key)` silently discards multiple values for the same key, which can cause bypassing of upstream WAFs or WAFs parsing the query string differently.
 **Prevention:** Use `request.args.getlist(key)` and explicitly reject requests with multiple values if they are not expected.
+
+## 2026-04-23 - [Missing Context in Security Logs]
+**Vulnerability:** The global exception handler was securely logging unhandled exceptions internally to prevent stack trace leaks to users, but it lacked crucial context like the client's IP address, the HTTP method, and the requested path. Without this context, determining if an exception was a bug or a targeted exploit (e.g., DoS, fuzzing) is very difficult.
+**Learning:** Security logs for unhandled exceptions must include actionable metadata (who, where, what) to be useful for incident response and threat hunting.
+**Prevention:** Always capture request context (like `request.remote_addr`, `request.method`, and `request.path`) when internally logging errors in global exception handlers to ensure comprehensive audit trails.
