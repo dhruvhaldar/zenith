@@ -62,3 +62,7 @@
 ## 2026-04-21 - Explicit API Endpoint Documentation
 **Learning:** Providing interactive API demo links is helpful, but if users have to hover over or click the link to discover the actual endpoint URL and HTTP method, it slows down developer exploration. Displaying the endpoint structure and HTTP method (e.g., `GET /api/...`) explicitly in text or `<code>` blocks on the UI provides immediate, transparent documentation, significantly improving the developer experience.
 **Action:** When providing interactive API demo links, always explicitly display the endpoint structure and HTTP method directly on the UI using `<code>` blocks to improve developer experience and transparency.
+
+## 2026-04-24 - Screen Reader Auditory Clutter from Non-Semantic Separators
+**Learning:** To prevent auditory clutter for screen reader users, always wrap non-semantic text characters used purely for visual separation (like `|`, `•`, or `-` in footers or breadcrumbs) in an inline element (like `<span>`) with `aria-hidden="true"`. This hides the separator from assistive technologies while allowing custom CSS spacing and styling.
+**Action:** When adding text-based visual separators between links or items, always wrap them in `<span aria-hidden="true">` to keep the screen reader experience clean.
