@@ -8,8 +8,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from zenith.optics import Telescope, CCD
 from zenith.exoplanets import TransitSimulator
 from zenith.cosmology import recession_velocity
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+# 🛡️ Sentinel: Properly parse reverse proxy headers (Vercel) to log accurate remote client IPs
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 # 🛡️ Sentinel: Enforce a strict maximum request size (10 KB) to prevent DoS via massive payloads
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024

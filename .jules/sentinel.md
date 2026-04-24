@@ -74,3 +74,8 @@
 **Vulnerability:** The global exception handler was securely logging unhandled exceptions internally to prevent stack trace leaks to users, but it lacked crucial context like the client's IP address, the HTTP method, and the requested path. Without this context, determining if an exception was a bug or a targeted exploit (e.g., DoS, fuzzing) is very difficult.
 **Learning:** Security logs for unhandled exceptions must include actionable metadata (who, where, what) to be useful for incident response and threat hunting.
 **Prevention:** Always capture request context (like `request.remote_addr`, `request.method`, and `request.path`) when internally logging errors in global exception handlers to ensure comprehensive audit trails.
+
+## 2026-04-24 - [IP Spoofing and Blind Logging in Vercel Deployments]
+**Vulnerability:** The global exception handler relied on `request.remote_addr` to log the client's IP address for security auditing. In a reverse proxy environment like Vercel, this value corresponds to the proxy's internal IP, not the actual client, masking the true source of attacks and rendering logs useless.
+**Learning:** When deployed behind reverse proxies or load balancers, the true client IP is passed via headers like `X-Forwarded-For`. If the application does not explicitly parse these headers, it will log the proxy's IP.
+**Prevention:** Always use a secure middleware like `werkzeug.middleware.proxy_fix.ProxyFix` to parse reverse proxy headers and accurately reflect the client's actual IP in `request.remote_addr`, ensuring security logs capture actionable data.
