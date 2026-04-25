@@ -120,7 +120,9 @@ def get_snr():
             return jsonify({"error": "Magnitude out of reasonable bounds (-30 to 50)"}), 400
         if not (0 <= exposure <= 100000):
             return jsonify({"error": "Exposure out of reasonable bounds (0 to 100000 seconds)"}), 400
-    except ValueError:
+    except ValueError as e:
+        client_ip = request.remote_addr or "Unknown IP"
+        app.logger.warning(f"Input validation failed on {request.method} {request.path} from {client_ip}: {e}")
         return jsonify({"error": "Invalid input parameters"}), 400
 
     scope = Telescope(aperture=0.203, focal_length=2.0)
@@ -143,7 +145,9 @@ def get_transit():
         # which can bypass > 0 checks and cause ZeroDivisionErrors in transit calculations
         if not (0.0001 <= period <= 100000):
             return jsonify({"error": "Period must be between 0.0001 and 100000 days"}), 400
-    except ValueError:
+    except ValueError as e:
+        client_ip = request.remote_addr or "Unknown IP"
+        app.logger.warning(f"Input validation failed on {request.method} {request.path} from {client_ip}: {e}")
         return jsonify({"error": "Invalid input parameters"}), 400
 
     sim = TransitSimulator(period_days=period)
@@ -161,7 +165,9 @@ def get_hubble():
         d = safe_get_float(request.args, 'd', 10.0)
         if not (0 <= d <= 15000):
             return jsonify({"error": "Distance out of reasonable bounds (0 to 15000 Mpc)"}), 400
-    except ValueError:
+    except ValueError as e:
+        client_ip = request.remote_addr or "Unknown IP"
+        app.logger.warning(f"Input validation failed on {request.method} {request.path} from {client_ip}: {e}")
         return jsonify({"error": "Invalid input parameters"}), 400
 
     v = recession_velocity(d)
