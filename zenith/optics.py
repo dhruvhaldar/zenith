@@ -101,9 +101,14 @@ class Telescope:
         # Total Noise
         # ⚡ Bolt: Combine scalar constant noise terms before array addition to avoid redundant array iterations
         constant_noise = total_sky_photons + dark_electrons + read_noise_electrons
-        noise = np.sqrt(photons_target + constant_noise)
 
-        return photons_target / noise
+        # ⚡ Bolt: Use in-place operations to entirely eliminate intermediate array allocations when operating on arrays
+        noise = photons_target + constant_noise
+        if isinstance(noise, np.ndarray):
+            np.sqrt(noise, out=noise)
+            np.divide(photons_target, noise, out=noise)
+            return noise
+        return photons_target / np.sqrt(noise)
 
     def plot_performance_curve(self, mag_range, ccd, exposure=60, filename="snr_curve.png"):
         """

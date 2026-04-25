@@ -55,3 +55,7 @@
 ## 2024-05-31 - Eliminate Temporary Arrays with In-Place Operations
 **Learning:** Even when scalar constants are grouped, evaluating a complex mathematical expression over an array (e.g., `1.0 - depth * np.clip(c1 - np.abs(x) * c2, 0, 1)`) creates a temporary array for every arithmetic operation (`np.abs()`, `*`, `-`, `np.clip()`, `*`, `-`). These allocations dominate execution time for large arrays.
 **Action:** Replace sequential operations that allocate new arrays with in-place augmentations (`*=`, `+=`) on a single array. Start with the innermost function that creates a new array (e.g., `temp = np.abs(x)`), then use `temp *= -c2`, `temp += c1`, `np.clip(temp, 0, 1, out=temp)`, etc. This typically doubles performance by entirely eliminating intermediate array overhead.
+
+## 2026-12-25 - In-Place Operations on Dynamic Input Types
+**Learning:** NumPy's in-place modification parameter (`out=`) requires the target to be an `ndarray`. If a function's inputs can dynamically result in scalar floats instead of arrays, using `out=` will raise a `TypeError: return arrays must be of ArrayType`.
+**Action:** Always check `isinstance(var, np.ndarray)` before using in-place operations (`np.sqrt(x, out=x)`) on variables that might dynamically be scalar floats based on input types.
