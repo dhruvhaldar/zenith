@@ -117,8 +117,12 @@ def get_snr():
         exposure = safe_get_float(request.args, 'exposure', 60.0)
 
         if not (-30 <= mag <= 50):
+            client_ip = request.remote_addr or "Unknown IP"
+            app.logger.warning(f"Boundary validation failed on {request.method} {request.path} from {client_ip}: Magnitude {mag} out of reasonable bounds")
             return jsonify({"error": "Magnitude out of reasonable bounds (-30 to 50)"}), 400
         if not (0 <= exposure <= 100000):
+            client_ip = request.remote_addr or "Unknown IP"
+            app.logger.warning(f"Boundary validation failed on {request.method} {request.path} from {client_ip}: Exposure {exposure} out of reasonable bounds")
             return jsonify({"error": "Exposure out of reasonable bounds (0 to 100000 seconds)"}), 400
     except ValueError as e:
         client_ip = request.remote_addr or "Unknown IP"
@@ -144,6 +148,8 @@ def get_transit():
         # 🛡️ Sentinel: Enforce a practical lower bound to prevent float underflow
         # which can bypass > 0 checks and cause ZeroDivisionErrors in transit calculations
         if not (0.0001 <= period <= 100000):
+            client_ip = request.remote_addr or "Unknown IP"
+            app.logger.warning(f"Boundary validation failed on {request.method} {request.path} from {client_ip}: Period {period} out of reasonable bounds")
             return jsonify({"error": "Period must be between 0.0001 and 100000 days"}), 400
     except ValueError as e:
         client_ip = request.remote_addr or "Unknown IP"
@@ -164,6 +170,8 @@ def get_hubble():
         # 🛡️ Sentinel: Input validation with limits
         d = safe_get_float(request.args, 'd', 10.0)
         if not (0 <= d <= 15000):
+            client_ip = request.remote_addr or "Unknown IP"
+            app.logger.warning(f"Boundary validation failed on {request.method} {request.path} from {client_ip}: Distance {d} out of reasonable bounds")
             return jsonify({"error": "Distance out of reasonable bounds (0 to 15000 Mpc)"}), 400
     except ValueError as e:
         client_ip = request.remote_addr or "Unknown IP"
