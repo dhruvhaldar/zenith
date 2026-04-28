@@ -59,3 +59,11 @@
 ## 2026-12-25 - In-Place Operations on Dynamic Input Types
 **Learning:** NumPy's in-place modification parameter (`out=`) requires the target to be an `ndarray`. If a function's inputs can dynamically result in scalar floats instead of arrays, using `out=` will raise a `TypeError: return arrays must be of ArrayType`.
 **Action:** Always check `isinstance(var, np.ndarray)` before using in-place operations (`np.sqrt(x, out=x)`) on variables that might dynamically be scalar floats based on input types.
+
+## 2026-04-28 - Fast In-Place Arrays in Astrophysics Math
+**Learning:** The simple multiplication and generic math routines in astrophyscial functions (like distance modulus and luminosity) generate massive array allocation overhead due to sequential operations.
+**Action:** When working with large arrays, enforce the type check `isinstance(var, np.ndarray)` and use in-place mathematical assignments (`*=`, `+=`, `np.square(out=)`) to minimize allocations.
+
+## 2026-04-28 - In-Place Operations on Mixed Arrays and Int Arrays
+**Learning:** When using in-place operations (`*=`, `+=`, `np.square(out=)`) to optimize functions accepting potentially mixed-type NumPy arrays (e.g., float arrays and int arrays, or arrays and scalars), simply coercing the input arrays using `res = np.array(input, dtype=float)` fails when the shape differs or when casting integer arrays directly. This causes `ValueError: non-broadcastable output operand` or `UFuncTypeError`.
+**Action:** Always allocate an explicitly float-typed array matching the broadcasted shape `res = np.empty(np.broadcast(a, b).shape, dtype=float)` before populating and modifying it in-place.

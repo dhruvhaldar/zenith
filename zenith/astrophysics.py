@@ -84,9 +84,27 @@ def luminosity_from_radius_temp(radius, temperature):
     """
     # ⚡ Bolt: Moved sigma_sb import to top level to avoid repeated import overhead inside function
     # ⚡ Bolt: Unroll small integer powers to avoid NumPy generic power overhead (~2x faster)
-    r2 = radius * radius
-    t2 = temperature * temperature
-    t4 = t2 * t2
-    # ⚡ Bolt: Group scalar variables into a single constant before array multiplication
-    # to avoid creating redundant intermediate arrays.
-    return (4.0 * np.pi * sigma_sb) * (r2 * t4)
+    if isinstance(radius, np.ndarray) or isinstance(temperature, np.ndarray):
+        # Start with a float array containing the largest broadcasted shape
+        # to prevent UFuncTypeError when doing in-place ops on int arrays or mixed shapes
+        res = np.empty(np.broadcast(radius, temperature).shape, dtype=float)
+        res[...] = temperature
+
+        np.square(res, out=res) # t^2
+        np.square(res, out=res) # t^4
+
+        # ⚡ Bolt: Group scalar variables into a single constant before array multiplication
+        # to avoid creating redundant intermediate arrays.
+        constant = 4.0 * np.pi * sigma_sb
+
+        res *= constant
+        res *= radius
+        res *= radius
+        return res
+    else:
+        r2 = radius * radius
+        t2 = temperature * temperature
+        t4 = t2 * t2
+        # ⚡ Bolt: Group scalar variables into a single constant before array multiplication
+        # to avoid creating redundant intermediate arrays.
+        return (4.0 * np.pi * sigma_sb) * (r2 * t4)
