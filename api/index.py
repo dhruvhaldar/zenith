@@ -41,6 +41,9 @@ from werkzeug.exceptions import HTTPException
 def handle_exception(e):
     # Pass through HTTP errors as JSON
     if isinstance(e, HTTPException):
+        # 🛡️ Sentinel: Log HTTP exceptions (e.g., 404, 405, 413) to maintain an audit trail of potential fuzzing or scanning attempts.
+        client_ip = request.remote_addr or "Unknown IP"
+        app.logger.warning(f"HTTP Exception {e.code} on {request.method} {request.path} from {client_ip}: {e.name}")
         return jsonify({
             "error": e.name,
             "description": e.description
