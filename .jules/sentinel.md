@@ -87,3 +87,8 @@
 **Vulnerability:** Input validation boundaries correctly returned `400 Bad Request`, but failed to log the incident. Without a persistent record, an attacker continuously brute-forcing or fuzzing the endpoints (e.g., trying to trigger mathematical errors or DoS via massive numbers) remains invisible to administrators until it affects service availability.
 **Learning:** Returning a `400` status code is sufficient for the client, but insufficient for security monitoring. Validation logic must fail loudly in the backend logs to create an audit trail.
 **Prevention:** When validating API inputs, explicitly log the failure (e.g., `app.logger.warning`) alongside the request context (`request.remote_addr`, `request.method`, `request.path`) and the error reason to ensure all anomalous input attempts are documented for security review.
+
+## 2026-05-01 - [Missing Audit Trails for HTTPExceptions]
+**Vulnerability:** Native `HTTPException` errors (like 404 Not Found or 405 Method Not Allowed) were being caught and returned as JSON, but they were not being logged. This prevents administrators from seeing potential fuzzing or reconnaissance attacks.
+**Learning:** Flask does not log handled `HTTPException` errors by default when intercepted by a global exception handler.
+**Prevention:** Always add explicit logging with request context within global exception handlers for HTTP exceptions to maintain a security audit trail.
