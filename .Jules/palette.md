@@ -66,3 +66,11 @@
 ## 2026-04-24 - Screen Reader Auditory Clutter from Non-Semantic Separators
 **Learning:** To prevent auditory clutter for screen reader users, always wrap non-semantic text characters used purely for visual separation (like `|`, `•`, or `-` in footers or breadcrumbs) in an inline element (like `<span>`) with `aria-hidden="true"`. This hides the separator from assistive technologies while allowing custom CSS spacing and styling.
 **Action:** When adding text-based visual separators between links or items, always wrap them in `<span aria-hidden="true">` to keep the screen reader experience clean.
+
+## 2026-04-30 - One-Click Select for API Endpoints
+**Learning:** Forcing developers to manually highlight and drag to select API endpoints from documentation is a tedious micro-friction. By wrapping the endpoint path in a span styled with `user-select: all; -webkit-user-select: all; cursor: copy;` and providing a tooltip like `title="Click to select"`, users can instantly copy the entire path with a single click.
+**Action:** When displaying literal API endpoints or code snippets intended for copying in documentation, apply `user-select: all` to provide a frictionless copy interaction without relying on custom JavaScript clipboards.
+
+## 2026-04-30 - Machine Translation of Code Snippets
+**Learning:** Browser-level machine translation (like Google Translate) aggressively translates text within `<code>` blocks, which can destructively alter technical HTTP methods (e.g., translating "GET" to "OBTENER") or literal endpoint paths, rendering the documentation unusable for non-native readers relying on translation tools.
+**Action:** Always add the standard HTML `translate="no"` attribute to `<code>` tags (or other literal technical blocks) to protect them from destructive auto-translation and maintain their utility across all localizations.
