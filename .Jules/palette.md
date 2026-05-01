@@ -74,3 +74,7 @@
 ## 2026-04-30 - Machine Translation of Code Snippets
 **Learning:** Browser-level machine translation (like Google Translate) aggressively translates text within `<code>` blocks, which can destructively alter technical HTTP methods (e.g., translating "GET" to "OBTENER") or literal endpoint paths, rendering the documentation unusable for non-native readers relying on translation tools.
 **Action:** Always add the standard HTML `translate="no"` attribute to `<code>` tags (or other literal technical blocks) to protect them from destructive auto-translation and maintain their utility across all localizations.
+
+## 2026-05-01 - Interactive Hover States for Copyable Elements
+**Learning:** Inline `user-select: all` lacks interactive feedback (hover/focus states), making it less discoverable as a clickable element, and that animations triggered by `:target` should respect `prefers-reduced-motion`.
+**Action:** Extract these to CSS classes to enable interactive states and always wrap animations in reduced-motion media queries.
