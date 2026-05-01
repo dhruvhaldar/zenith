@@ -19,8 +19,25 @@
         abbr[title] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; }
         abbr[title]:focus-visible { outline: 3px solid #0056b3; outline-offset: 3px; border-radius: 2px; }
         a abbr[title] { cursor: inherit; }
+        .copyable-text {
+            user-select: all;
+            -webkit-user-select: all;
+            cursor: copy;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: background-color 0.2s ease;
+        }
+        .copyable-text:hover, .copyable-text:focus-visible {
+            background-color: #e0e0e0;
+            outline: 2px solid #0056b3;
+            outline-offset: 1px;
+        }
         @media (prefers-reduced-motion: no-preference) {
             html { scroll-behavior: smooth; }
+            :target:not(body) {
+                animation: target-highlight 2s ease-out;
+                border-radius: 4px;
+            }
         }
         [id] { scroll-margin-top: 2rem; }
         [tabindex="-1"]:focus { outline: none; }
@@ -41,10 +58,6 @@
             30% { background-color: rgba(255, 215, 0, 0.4); }
             100% { background-color: transparent; }
         }
-        :target:not(body) {
-            animation: target-highlight 2s ease-out;
-            border-radius: 4px;
-        }
     </style>
 </head>
 <body id="top" tabindex="-1">
@@ -63,9 +76,9 @@
 
         <h2 id="api-demo" tabindex="-1">Live <abbr title="Application Programming Interface" aria-label="Application Programming Interface" tabindex="0">API</abbr> Demo</h2>
         <ul>
-            <li><code translate="no">GET <span style="user-select: all; -webkit-user-select: all; cursor: copy;" title="Click to select">/api/snr</span></code> <span aria-hidden="true">-</span> <a href="/api/snr?mag=12&exposure=60" target="_blank" rel="noopener noreferrer" aria-label="Calculate Signal-to-Noise Ratio for Magnitude 12 at 60 seconds (opens in a new tab)" title="Opens in a new tab">Calculate <abbr title="Signal-to-Noise Ratio">SNR</abbr> (<abbr title="Magnitude">Mag</abbr> 12, <abbr title="60 seconds">60s</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
-            <li><code translate="no">GET <span style="user-select: all; -webkit-user-select: all; cursor: copy;" title="Click to select">/api/transit</span></code> <span aria-hidden="true">-</span> <a href="/api/transit?period=3.5" target="_blank" rel="noopener noreferrer" aria-label="Simulate Transit with a Period of 3.5 days (opens in a new tab)" title="Opens in a new tab">Simulate Transit (<abbr title="Period = 3.5 days">P=3.5d</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
-            <li><code translate="no">GET <span style="user-select: all; -webkit-user-select: all; cursor: copy;" title="Click to select">/api/hubble</span></code> <span aria-hidden="true">-</span> <a href="/api/hubble?d=100" target="_blank" rel="noopener noreferrer" aria-label="Hubble Recession Velocity at a distance of 100 Megaparsecs (opens in a new tab)" title="Opens in a new tab">Hubble Recession Velocity (<abbr title="distance = 100">d=100</abbr> <abbr title="Megaparsecs">Mpc</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
+            <li><code translate="no">GET <span class="copyable-text" title="Click to select" tabindex="0">/api/snr</span></code> <span aria-hidden="true">-</span> <a href="/api/snr?mag=12&exposure=60" target="_blank" rel="noopener noreferrer" aria-label="Calculate Signal-to-Noise Ratio for Magnitude 12 at 60 seconds (opens in a new tab)" title="Opens in a new tab">Calculate <abbr title="Signal-to-Noise Ratio">SNR</abbr> (<abbr title="Magnitude">Mag</abbr> 12, <abbr title="60 seconds">60s</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
+            <li><code translate="no">GET <span class="copyable-text" title="Click to select" tabindex="0">/api/transit</span></code> <span aria-hidden="true">-</span> <a href="/api/transit?period=3.5" target="_blank" rel="noopener noreferrer" aria-label="Simulate Transit with a Period of 3.5 days (opens in a new tab)" title="Opens in a new tab">Simulate Transit (<abbr title="Period = 3.5 days">P=3.5d</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
+            <li><code translate="no">GET <span class="copyable-text" title="Click to select" tabindex="0">/api/hubble</span></code> <span aria-hidden="true">-</span> <a href="/api/hubble?d=100" target="_blank" rel="noopener noreferrer" aria-label="Hubble Recession Velocity at a distance of 100 Megaparsecs (opens in a new tab)" title="Opens in a new tab">Hubble Recession Velocity (<abbr title="distance = 100">d=100</abbr> <abbr title="Megaparsecs">Mpc</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
         </ul>
 
         <h2 id="artifacts" tabindex="-1">Generated Artifacts</h2>
