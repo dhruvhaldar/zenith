@@ -68,7 +68,13 @@ class Telescope:
         C_target = ZERO_MAG_FLUX * self.area * exposure * ccd.qe
         # Photons hitting the detector
         # Fast array exponentiation (10**x -> np.exp(ln(10) * x)) provides ~2x speedup
-        photons_target = C_target * np.exp(-0.9210340371976183 * target_mag)
+        # ⚡ Bolt: Eliminate temporary array creation overhead during array exponentiation
+        if isinstance(target_mag, np.ndarray):
+            photons_target = target_mag * -0.9210340371976183
+            np.exp(photons_target, out=photons_target)
+            photons_target *= C_target
+        else:
+            photons_target = C_target * np.exp(-0.9210340371976183 * target_mag)
 
         # 2. Calculate Noise
         # a. Shot noise from target (sqrt(S))
@@ -82,7 +88,13 @@ class Telescope:
         # ⚡ Bolt: Combined all scalar constants before array multiplication
         C_sky = ZERO_MAG_FLUX * self.area * exposure * ccd.qe * pixel_area_arcsec
         # Photons from sky per pixel
-        photons_sky_pixel = C_sky * np.exp(-0.9210340371976183 * sky_mag)
+        # ⚡ Bolt: Eliminate temporary array creation overhead during array exponentiation
+        if isinstance(sky_mag, np.ndarray):
+            photons_sky_pixel = sky_mag * -0.9210340371976183
+            np.exp(photons_sky_pixel, out=photons_sky_pixel)
+            photons_sky_pixel *= C_sky
+        else:
+            photons_sky_pixel = C_sky * np.exp(-0.9210340371976183 * sky_mag)
         # Assuming star light is concentrated in a certain number of pixels (aperture photometry)
         # Let's assume a seeing disk of roughly 2 arcsec diameter, area ~ pi*1^2 = 3.14 arcsec^2
         # Number of pixels for aperture
