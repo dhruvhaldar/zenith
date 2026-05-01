@@ -92,3 +92,8 @@
 **Vulnerability:** Native `HTTPException` errors (like 404 Not Found or 405 Method Not Allowed) were being caught and returned as JSON, but they were not being logged. This prevents administrators from seeing potential fuzzing or reconnaissance attacks.
 **Learning:** Flask does not log handled `HTTPException` errors by default when intercepted by a global exception handler.
 **Prevention:** Always add explicit logging with request context within global exception handlers for HTTP exceptions to maintain a security audit trail.
+
+## 2026-05-01 - [Terminal Escape Sequence Injection in Logs]
+**Vulnerability:** The application was vulnerable to Terminal Escape Sequence Injection. The custom log formatter mitigated CRLF injection (newlines) but did not strip ANSI terminal escape sequences (like `\x1B[31m`) or other control characters. An attacker could inject these sequences into logged fields (like URLs) to manipulate the terminal output of administrators viewing the logs, potentially hiding malicious activity or spoofing log entries.
+**Learning:** Sanitizing newlines is insufficient for comprehensive log protection. Terminal emulators interpret escape sequences and control characters, making logs an attack vector against the administrators themselves.
+**Prevention:** Always strip ANSI escape sequences and non-printable control characters using robust regular expressions in addition to newline sanitation when writing user-controlled data to terminal-viewable logs.

@@ -18,12 +18,21 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024
 
 import logging
+import re
 
 class SanitizedFormatter(logging.Formatter):
     """🛡️ Sentinel: Prevent Log Injection by stripping newlines from the entire log record, including traceback."""
+    # Match ANSI escape sequences
+    ANSI_ESCAPE_RE = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    # Match control characters except tab and newline
+    CONTROL_CHAR_RE = re.compile(r'[\x00-\x08\x0b-\x1f\x7f]')
+
     def format(self, record):
         formatted_message = super().format(record)
-        return formatted_message.replace('\n', '  |  ').replace('\r', '')
+        sanitized = formatted_message.replace('\n', '  |  ').replace('\r', '')
+        sanitized = self.ANSI_ESCAPE_RE.sub('', sanitized)
+        sanitized = self.CONTROL_CHAR_RE.sub('', sanitized)
+        return sanitized
 
 if app.logger.handlers:
     for handler in app.logger.handlers:
