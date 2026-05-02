@@ -23,3 +23,32 @@ def test_sanitized_formatter_terminal_escapes():
     assert "newline" in log_contents
 
     logger.removeHandler(handler)
+
+def test_sanitized_formatter_werkzeug_escapes():
+    werkzeug_logger = logging.getLogger('werkzeug')
+    # Store old handlers
+    old_handlers = list(werkzeug_logger.handlers)
+    for h in old_handlers:
+        werkzeug_logger.removeHandler(h)
+
+    log_capture = io.StringIO()
+    handler = logging.StreamHandler(log_capture)
+    handler.setFormatter(SanitizedFormatter('%(message)s'))
+    werkzeug_logger.addHandler(handler)
+
+    werkzeug_logger.warning("Normal text \x1B[31mHACKED\x1B[0m text \x08\x08 and \x00 null \t tab \n newline \r")
+
+    log_contents = log_capture.getvalue()
+
+    assert "HACKED" in log_contents
+    assert "\x1B" not in log_contents
+    assert "\x08" not in log_contents
+    assert "\x00" not in log_contents
+    assert "tab" in log_contents
+    assert "\n" in log_contents
+    assert "newline" in log_contents
+
+    # Restore old handlers
+    werkzeug_logger.removeHandler(handler)
+    for h in old_handlers:
+        werkzeug_logger.addHandler(h)
