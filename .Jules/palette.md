@@ -78,3 +78,7 @@
 ## 2026-05-01 - Interactive Hover States for Copyable Elements
 **Learning:** Inline `user-select: all` lacks interactive feedback (hover/focus states), making it less discoverable as a clickable element, and that animations triggered by `:target` should respect `prefers-reduced-motion`.
 **Action:** Extract these to CSS classes to enable interactive states and always wrap animations in reduced-motion media queries.
+
+## 2026-05-02 - Keyboard Shortcut Hints for Copyable Elements
+**Learning:** While `user-select: all` makes copying text easier by selecting everything with one click, its functionality isn't always immediately obvious to users. Adding explicit, visual keyboard shortcut hints using `<kbd>` tags provides clear instruction and improves discoverability of this micro-interaction.
+**Action:** When implementing one-click copyable text (via `user-select: all`), accompany it with brief instructional text utilizing styled `<kbd>` tags (e.g., `<kbd>Ctrl</kbd> + <kbd>C</kbd>`) to guide the user on how to complete the action.
