@@ -43,6 +43,16 @@ else:
     app.logger.addHandler(handler)
     app.logger.setLevel(logging.INFO)
 
+werkzeug_logger = logging.getLogger('werkzeug')
+if werkzeug_logger.handlers:
+    for handler in werkzeug_logger.handlers:
+        handler.setFormatter(SanitizedFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+else:
+    handler = logging.StreamHandler()
+    handler.setFormatter(SanitizedFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    werkzeug_logger.addHandler(handler)
+    werkzeug_logger.setLevel(logging.INFO)
+
 from werkzeug.exceptions import HTTPException
 
 # 🛡️ Sentinel: Global error handler to prevent stack trace leakage and HTML injection
