@@ -105,8 +105,7 @@ def calculate_airmass(altitude):
     if altitude <= 0:
         return float('inf')
 
-    zenith_angle_rad = deg_to_rad(90.0 - altitude)
-    # Simple secant approximation: X = sec(z)
-    # Better approximation for low altitudes: Young's or Pickering's
-    # Using simple secant for now as per "introductory" scope, but let's add a clamp
-    return 1.0 / math.cos(zenith_angle_rad)
+    # Simple secant approximation: X = sec(z) where z is zenith angle
+    # Mathematically, cos(90 - alt) = sin(alt)
+    # ⚡ Bolt: Using sin(alt) directly avoids subtraction and reduces operations
+    return 1.0 / math.sin(math.radians(altitude))

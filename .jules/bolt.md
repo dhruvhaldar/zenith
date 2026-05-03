@@ -71,3 +71,7 @@
 ## 2024-05-31 - Sequential Array Division and Math in Astrophysics
 **Learning:** Sequential pure math functions like `a / (w5 * np.expm1(b))` in array processing implicitly allocate intermediate temporary arrays. For small arrays this is fine, but for calculating complex physics spectra over large arrays, avoiding these allocations leads to a measured ~30-40% speed boost.
 **Action:** Replace direct division with `np.empty_like()` and `np.divide(x, y, out=res)`. Use `isinstance(var, np.ndarray)` type guard to maintain performance for scalar calculation fallbacks.
+
+## 2024-05-31 - Trigonometric Simplification in Airmass Calculations
+**Learning:** Using trigonometric identities like `cos(90 - x) = sin(x)` allows removing mathematical operations and avoiding intermediary helper function calls (like `deg_to_rad` wrappers). This gives a measurable absolute speedup for high-frequency trigonometric operations.
+**Action:** When finding operations using complement angles (e.g., `90 - alt`), convert the trigonometric operation to avoid the subtraction. Use standard library `math.radians` instead of custom Python wrappers for maximum C-level performance.
