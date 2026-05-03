@@ -82,3 +82,7 @@
 ## 2026-05-02 - Keyboard Shortcut Hints for Copyable Elements
 **Learning:** While `user-select: all` makes copying text easier by selecting everything with one click, its functionality isn't always immediately obvious to users. Adding explicit, visual keyboard shortcut hints using `<kbd>` tags provides clear instruction and improves discoverability of this micro-interaction.
 **Action:** When implementing one-click copyable text (via `user-select: all`), accompany it with brief instructional text utilizing styled `<kbd>` tags (e.g., `<kbd>Ctrl</kbd> + <kbd>C</kbd>`) to guide the user on how to complete the action.
+
+## 2026-05-15 - Decorative Emojis and Screen Readers
+**Learning:** Sprinkling standalone emojis (like 💡, ✨, or 🚀) as visual decorations or icons can create annoying auditory clutter for screen reader users, as the screen reader will literally read out the emoji name (e.g., "light bulb tip:").
+**Action:** Always wrap decorative emojis used in a purely visual context inside a `<span aria-hidden="true">` to preserve visual delight without degrading the auditory experience.
