@@ -21,10 +21,13 @@ def planck_law(wavelength, temperature):
         np.divide(hc_kT, wavelength, out=res)
         np.expm1(res, out=res)
 
-        # ⚡ Bolt: Fast exponentiation for integer powers avoids NumPy pow overhead (~4x faster)
-        w2 = wavelength * wavelength
-        w5 = w2 * w2 * wavelength
-        res *= w5
+        # ⚡ Bolt: Use in-place multiplication to entirely eliminate intermediate array allocations
+        # for small integer powers when operating on the main result array
+        res *= wavelength
+        res *= wavelength
+        res *= wavelength
+        res *= wavelength
+        res *= wavelength
 
         np.divide(a, res, out=res)
         return res
