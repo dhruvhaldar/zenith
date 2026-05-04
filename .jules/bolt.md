@@ -75,3 +75,6 @@
 ## 2024-05-31 - Trigonometric Simplification in Airmass Calculations
 **Learning:** Using trigonometric identities like `cos(90 - x) = sin(x)` allows removing mathematical operations and avoiding intermediary helper function calls (like `deg_to_rad` wrappers). This gives a measurable absolute speedup for high-frequency trigonometric operations.
 **Action:** When finding operations using complement angles (e.g., `90 - alt`), convert the trigonometric operation to avoid the subtraction. Use standard library `math.radians` instead of custom Python wrappers for maximum C-level performance.
+## 2026-12-25 - In-Place Operations on NumPy Array Powers
+**Learning:** When evaluating integer powers of an array element-wise, creating new arrays sequentially (e.g. `w2 = wavelength * wavelength; w5 = w2 * w2 * wavelength`) implicitly allocates intermediate arrays (`w2` and `w5`).
+**Action:** When a calculation builds onto an already existing in-place memory buffer (e.g., `res *= w5`), you can completely eliminate the intermediate array allocations of integer exponentiation by sequentially multiplying the base array to the result array in-place multiple times (e.g., `res *= w; res *= w; res *= w; res *= w; res *= w`). This executes surprisingly faster and uses no extra memory bandwidth compared to `w2 * w2 * w`.
