@@ -78,3 +78,7 @@
 ## 2026-12-25 - In-Place Operations on NumPy Array Powers
 **Learning:** When evaluating integer powers of an array element-wise, creating new arrays sequentially (e.g. `w2 = wavelength * wavelength; w5 = w2 * w2 * wavelength`) implicitly allocates intermediate arrays (`w2` and `w5`).
 **Action:** When a calculation builds onto an already existing in-place memory buffer (e.g., `res *= w5`), you can completely eliminate the intermediate array allocations of integer exponentiation by sequentially multiplying the base array to the result array in-place multiple times (e.g., `res *= w; res *= w; res *= w; res *= w; res *= w`). This executes surprisingly faster and uses no extra memory bandwidth compared to `w2 * w2 * w`.
+
+## 2024-05-05 - Analytic Integration for Cosmology
+**Learning:** Numerical integration (`scipy.integrate.quad`) is highly computationally expensive for standard cosmological equations like lookback time, especially when evaluating dense arrays or missing cache.
+**Action:** Always check if a cosmology integral for standard flat LambdaCDM models can be analytically solved (e.g., using inverse hyperbolic functions like `math.asinh`) to completely eliminate the need for `quad` in standard cases. Ensure to maintain a fallback to numerical integration for edge-case cosmologies (where parameters might cause math domain errors, e.g., zero or negative values).
