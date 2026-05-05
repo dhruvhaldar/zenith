@@ -63,12 +63,18 @@ def lookback_time(z, H0=70.0, omega_m=0.3, omega_l=0.7):
     h0_s = H0 * 1000.0 / (1e6 * parsec)
     h0_gyr = h0_s * (1e9 * 365.25 * 24 * 3600.0)
 
-    def integrand(x):
-        # ⚡ Bolt: Use math.sqrt instead of np.sqrt to avoid scalar dispatch overhead in quad integration
-        # ⚡ Bolt: Unroll small integer power `(1.0 + x)**3` to explicit multiplication for ~20% faster quad integration
-        x1 = 1.0 + x
-        return 1.0 / (x1 * math.sqrt(omega_m * (x1 * x1 * x1) + omega_l))
-
-    result, error = quad(integrand, 0, z)
-
-    return result / h0_gyr
+    # ⚡ Bolt: Use exact analytic solution with inverse hyperbolic functions
+    # to eliminate computationally expensive numerical integration (quad).
+    # age t(z) = (2 / (3 H0 sqrt(Omega_L))) * asinh( sqrt(Omega_L / Omega_M) * (1+z)^(-3/2) )
+    if omega_m > 0 and omega_l > 0:
+        t_age_0 = (2.0 / (3.0 * math.sqrt(omega_l))) * math.asinh(math.sqrt(omega_l / omega_m))
+        t_age_z = (2.0 / (3.0 * math.sqrt(omega_l))) * math.asinh(math.sqrt(omega_l / omega_m) * ((1.0+z)**-1.5))
+        result = t_age_0 - t_age_z
+        return result / h0_gyr
+    else:
+        # Fallback to numerical integration for edge-case cosmologies (e.g., Matter-only or de Sitter universes)
+        def integrand(x):
+            x1 = 1.0 + x
+            return 1.0 / (x1 * math.sqrt(omega_m * (x1 * x1 * x1) + omega_l))
+        result, _ = quad(integrand, 0, z)
+        return result / h0_gyr
