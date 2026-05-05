@@ -86,3 +86,7 @@
 ## 2026-05-15 - Decorative Emojis and Screen Readers
 **Learning:** Sprinkling standalone emojis (like 💡, ✨, or 🚀) as visual decorations or icons can create annoying auditory clutter for screen reader users, as the screen reader will literally read out the emoji name (e.g., "light bulb tip:").
 **Action:** Always wrap decorative emojis used in a purely visual context inside a `<span aria-hidden="true">` to preserve visual delight without degrading the auditory experience.
+
+## 2026-05-05 - Explicit Dimensions for Lazy Images
+**Learning:** When adding `loading="lazy"` to defer offscreen images, failing to specify explicit `width` and `height` attributes causes severe layout shifts (Cumulative Layout Shift - CLS). Because the browser defers loading the image, it cannot calculate its dimensions until the user scrolls and the image downloads, causing content below to abruptly jump down as the image renders, destroying the reading experience.
+**Action:** Always pair `loading="lazy"` with explicit `width` and `height` attributes on the `<img>` tag. Combine this with CSS `max-width: 100%; height: auto;` to maintain responsive scaling while still allowing the browser to pre-calculate and reserve the correct aspect-ratio space before the image loads.
