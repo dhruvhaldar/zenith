@@ -43,6 +43,10 @@ else:
     app.logger.addHandler(handler)
     app.logger.setLevel(logging.INFO)
 
+# 🛡️ Sentinel: Prevent sanitized log messages from propagating to the root logger,
+# where they might be processed by an unsanitized handler.
+app.logger.propagate = False
+
 werkzeug_logger = logging.getLogger('werkzeug')
 if werkzeug_logger.handlers:
     for handler in werkzeug_logger.handlers:
@@ -52,6 +56,10 @@ else:
     handler.setFormatter(SanitizedFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
     werkzeug_logger.addHandler(handler)
     werkzeug_logger.setLevel(logging.INFO)
+
+# 🛡️ Sentinel: Prevent sanitized log messages from propagating to the root logger,
+# where they might be processed by an unsanitized handler.
+werkzeug_logger.propagate = False
 
 from werkzeug.exceptions import HTTPException
 
