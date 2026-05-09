@@ -82,3 +82,7 @@
 ## 2024-05-05 - Analytic Integration for Cosmology
 **Learning:** Numerical integration (`scipy.integrate.quad`) is highly computationally expensive for standard cosmological equations like lookback time, especially when evaluating dense arrays or missing cache.
 **Action:** Always check if a cosmology integral for standard flat LambdaCDM models can be analytically solved (e.g., using inverse hyperbolic functions like `math.asinh`) to completely eliminate the need for `quad` in standard cases. Ensure to maintain a fallback to numerical integration for edge-case cosmologies (where parameters might cause math domain errors, e.g., zero or negative values).
+
+## 2024-05-31 - Eliminate Temporary Arrays in NumPy Division Chain
+**Learning:** When evaluating chained divisions involving a scalar and an array like `(scalar / array) / wavelength` in NumPy, directly evaluating the innermost expression `(scalar / array)` generates an intermediate temporary array allocation.
+**Action:** Pre-calculate any combined scalars (e.g., `hc_k = (h * c) / k_B`), then sequentially apply operations into a pre-allocated result buffer using `np.divide` (e.g. `np.divide(hc_k, temperature, out=res); np.divide(res, wavelength, out=res)`). This completely eliminates the temporary intermediate array and saves execution time/memory bandwidth.
