@@ -17,6 +17,13 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 # 🛡️ Sentinel: Enforce a strict maximum request size (10 KB) to prevent DoS via massive payloads
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024
 
+# 🛡️ Sentinel: Enforce secure session cookie defaults proactively
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+)
+
 import logging
 import re
 
