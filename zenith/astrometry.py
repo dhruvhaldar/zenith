@@ -17,23 +17,18 @@ def calculate_lst(longitude, time):
     # J2000 epoch is 2000-01-01 12:00:00 UTC
     # JD at J2000 = 2451545.0
 
-    # Calculate JD
-    # Python datetime timestamp is seconds since 1970-01-01 00:00:00 UTC
-    # JD of 1970-01-01 is 2440587.5
+    # ⚡ Bolt: Mathematically expand and combine scalar terms to prevent redundant assignments
+    # and operations.
+    # d = (ts / 86400.0) + 2440587.5 - 2451545.0
     ts = time.replace(tzinfo=timezone.utc).timestamp()
-    jd = (ts / 86400.0) + 2440587.5
-
-    # Days since J2000
-    d = jd - 2451545.0
+    d = (ts / 86400.0) - 10957.5
 
     # Greenwich Mean Sidereal Time (GMST) in degrees
     # Approximate formula
     gmst = 280.46061837 + 360.98564736629 * d
-    gmst = gmst % 360.0
 
     # Local Sidereal Time
-    lst = gmst + longitude
-    return lst % 360.0
+    return (gmst + longitude) % 360.0
 
 def ra_dec_to_alt_az(ra, dec, lat, lon, time):
     """

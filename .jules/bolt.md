@@ -86,3 +86,7 @@
 ## 2024-05-31 - Eliminate Temporary Arrays in NumPy Division Chain
 **Learning:** When evaluating chained divisions involving a scalar and an array like `(scalar / array) / wavelength` in NumPy, directly evaluating the innermost expression `(scalar / array)` generates an intermediate temporary array allocation.
 **Action:** Pre-calculate any combined scalars (e.g., `hc_k = (h * c) / k_B`), then sequentially apply operations into a pre-allocated result buffer using `np.divide` (e.g. `np.divide(hc_k, temperature, out=res); np.divide(res, wavelength, out=res)`). This completely eliminates the temporary intermediate array and saves execution time/memory bandwidth.
+
+## 2024-05-31 - Redundant Modulo and Date Assignment Removal
+**Learning:** In astronomical calculations involving `datetime` and modulo operations (like GMST and LST), evaluating them sequentially requires storing multiple variables and performing unnecessary object modifications (like `.replace(tzinfo=timezone.utc)` when `timestamp()` works regardless) and redundant mathematical operations (like `% 360` before adding longitude and doing `% 360` again).
+**Action:** Mathematically expand and group variables. Remove redundant modulo operations (`((A % 360) + B) % 360` is equivalent to `(A + B) % 360`). Avoid redundant timezone replaces like `time.replace(tzinfo=timezone.utc).timestamp()` which slows down processing compared to `.timestamp()`.
