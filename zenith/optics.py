@@ -112,9 +112,9 @@ class Telescope:
 
         # Total Noise
         # ⚡ Bolt: Combine scalar constant noise terms before array addition to avoid redundant array iterations
-        constant_noise = total_sky_photons + dark_electrons + read_noise_electrons
+        constant_noise = total_sky_photons + (dark_electrons + read_noise_electrons)
 
-        # ⚡ Bolt: Use in-place operations to entirely eliminate intermediate array allocations when operating on arrays
+        # Allocate noise array, then use in-place operations below to eliminate further intermediate allocations
         noise = photons_target + constant_noise
         if isinstance(noise, np.ndarray):
             np.sqrt(noise, out=noise)
