@@ -90,3 +90,7 @@
 ## 2024-05-31 - Redundant Modulo and Date Assignment Removal
 **Learning:** In astronomical calculations involving `datetime` and modulo operations (like GMST and LST), evaluating them sequentially requires storing multiple variables and performing unnecessary object modifications (like `.replace(tzinfo=timezone.utc)` when `timestamp()` works regardless) and redundant mathematical operations (like `% 360` before adding longitude and doing `% 360` again).
 **Action:** Mathematically expand and group variables. Remove redundant modulo operations (`((A % 360) + B) % 360` is equivalent to `(A + B) % 360`). Avoid redundant timezone replaces like `time.replace(tzinfo=timezone.utc).timestamp()` which slows down processing compared to `.timestamp()`.
+
+## 2026-05-13 - Trigonometric Subexpression Elimination
+**Learning:** Re-evaluating trigonometric functions for the same angle within tight calculation functions adds significant overhead.
+**Action:** Calculate and cache `sin` and `cos` of angles once per function execution, and derive `tan` from these cached values, to eliminate redundant math calls.
