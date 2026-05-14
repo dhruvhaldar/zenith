@@ -94,3 +94,7 @@
 ## 2026-05-13 - Trigonometric Subexpression Elimination
 **Learning:** Re-evaluating trigonometric functions for the same angle within tight calculation functions adds significant overhead.
 **Action:** Calculate and cache `sin` and `cos` of angles once per function execution, and derive `tan` from these cached values, to eliminate redundant math calls.
+
+## 2026-05-14 - NumPy scalar function overhead
+**Learning:** Using NumPy mathematical functions (e.g., `np.exp`, `np.sqrt`, `np.log`, `np.expm1`) on scalar values introduces significant dispatch overhead, making them ~2.5x to 4x slower than Python's built-in `math` module equivalents.
+**Action:** When evaluating scalar branches, replace NumPy math functions with their `math` equivalents (e.g., `math.exp`, `math.sqrt`) to eliminate unnecessary scalar dispatch overhead.

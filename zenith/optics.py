@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 from zenith.utils import c, h, rad_to_deg
 
@@ -74,7 +75,7 @@ class Telescope:
             np.exp(photons_target, out=photons_target)
             photons_target *= C_target
         else:
-            photons_target = C_target * np.exp(-0.9210340371976183 * target_mag)
+            photons_target = C_target * math.exp(-0.9210340371976183 * target_mag)
 
         # 2. Calculate Noise
         # a. Shot noise from target (sqrt(S))
@@ -94,7 +95,7 @@ class Telescope:
             np.exp(photons_sky_pixel, out=photons_sky_pixel)
             photons_sky_pixel *= C_sky
         else:
-            photons_sky_pixel = C_sky * np.exp(-0.9210340371976183 * sky_mag)
+            photons_sky_pixel = C_sky * math.exp(-0.9210340371976183 * sky_mag)
         # Assuming star light is concentrated in a certain number of pixels (aperture photometry)
         # Let's assume a seeing disk of roughly 2 arcsec diameter, area ~ pi*1^2 = 3.14 arcsec^2
         # Number of pixels for aperture
@@ -120,7 +121,7 @@ class Telescope:
             np.sqrt(noise, out=noise)
             np.divide(photons_target, noise, out=noise)
             return noise
-        return photons_target / np.sqrt(noise)
+        return photons_target / math.sqrt(noise)
 
     def plot_performance_curve(self, mag_range, ccd, exposure=60, filename="snr_curve.png"):
         """

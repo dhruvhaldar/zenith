@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from zenith.utils import h, c, k_B, sigma_sb
 
 def planck_law(wavelength, temperature):
@@ -47,7 +48,7 @@ def planck_law(wavelength, temperature):
         b = hc_k / (temperature * wavelength)
 
         # ⚡ Bolt: np.expm1(b) is more numerically stable than np.exp(b) - 1.0
-        return a / (w5 * np.expm1(b))
+        return a / (w5 * math.expm1(b))
 
 def wien_displacement(temperature):
     """
@@ -84,7 +85,7 @@ def distance_modulus(m, M):
     else:
         # ⚡ Bolt: Fast array exponentiation (10**x -> np.exp(ln(10) * x))
         # ⚡ Bolt: Combined scalar constants (2.302585092994046 / 5.0 = 0.4605170185988092) to avoid multiple intermediate array allocations
-        return np.exp(0.4605170185988092 * (m - M + 5.0))
+        return math.exp(0.4605170185988092 * (m - M + 5.0))
 
 def absolute_magnitude(m, d):
     """
@@ -108,7 +109,7 @@ def absolute_magnitude(m, d):
         # ⚡ Bolt: Fast array logarithm (log10(x) -> ln(x) / ln(10))
         # 5.0 / ln(10) = 2.171472409516259
         # This maps to highly-optimized C-level np.log and provides ~30% speedup
-        return m - 2.171472409516259 * np.log(d) + 5.0
+        return m - 2.171472409516259 * math.log(d) + 5.0
 
 def luminosity_from_radius_temp(radius, temperature):
     """
