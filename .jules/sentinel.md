@@ -112,3 +112,8 @@
 **Vulnerability:** The Flask application lacked explicit secure defaults for session cookies. If sessions were ever implemented or utilized by an underlying extension, the cookies would be vulnerable to interception over HTTP (missing Secure flag) or client-side script access (missing HttpOnly flag), and vulnerable to CSRF (missing SameSite attribute).
 **Learning:** Framework defaults are not always secure out of the box. Session configurations must be explicitly locked down at the application level to provide defense-in-depth, regardless of current session usage.
 **Prevention:** Always configure `SESSION_COOKIE_SECURE=True`, `SESSION_COOKIE_HTTPONLY=True`, and `SESSION_COOKIE_SAMESITE='Lax'` (or 'Strict') globally at the application initialization phase to protect future functionality.
+
+## 2026-05-15 - [Race Condition in LRU Caches]
+**Vulnerability:** Implementing an in-memory LRU cache using `collections.OrderedDict` for rate-limiting introduced a race condition in multi-threaded environments. Using the check-then-act pattern (`if key in cache: cache.pop(key)`) allows concurrent requests from the same IP to pass the `if` check, causing the second thread to encounter a `KeyError` on `pop()`, crashing the application and causing a Denial of Service (DoS) under load.
+**Learning:** Checking for dictionary key existence before removal is non-atomic in multi-threaded environments and can lead to unhandled exceptions when another thread removes the key concurrently.
+**Prevention:** When popping elements from a shared dictionary, use atomic methods with safe fallbacks (e.g., `reqs = rate_cache.pop(client_ip, [])`) rather than non-atomic check-then-act logic to avoid `KeyError` race conditions.

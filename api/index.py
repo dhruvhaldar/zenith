@@ -9,8 +9,36 @@ from zenith.optics import Telescope, CCD
 from zenith.exoplanets import TransitSimulator
 from zenith.cosmology import recession_velocity
 from werkzeug.middleware.proxy_fix import ProxyFix
+import time
+from collections import OrderedDict
 
 app = Flask(__name__)
+
+# 🛡️ Sentinel: In-memory LRU cache for rate limiting to prevent DoS attacks
+RATE_LIMIT = 100
+RATE_WINDOW = 60
+MAX_CACHE_SIZE = 1000
+rate_cache = OrderedDict()
+
+@app.before_request
+def enforce_rate_limit():
+    client_ip = request.remote_addr or "Unknown IP"
+    now = time.time()
+
+    # Safely get and remove to avoid KeyError in multi-threaded environments
+    reqs = rate_cache.pop(client_ip, [])
+    reqs = [t for t in reqs if now - t < RATE_WINDOW]
+
+    if len(rate_cache) >= MAX_CACHE_SIZE:
+        rate_cache.popitem(last=False)
+
+    if len(reqs) >= RATE_LIMIT:
+        rate_cache[client_ip] = reqs
+        app.logger.warning(f"Rate limit exceeded by {client_ip} on {request.method} {request.path}")
+        return jsonify({"error": "Too Many Requests"}), 429
+
+    reqs.append(now)
+    rate_cache[client_ip] = reqs
 # 🛡️ Sentinel: Properly parse reverse proxy headers (Vercel) to log accurate remote client IPs
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
