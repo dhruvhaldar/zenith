@@ -45,6 +45,13 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 # 🛡️ Sentinel: Enforce a strict maximum request size (10 KB) to prevent DoS via massive payloads
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024
 
+# 🛡️ Sentinel: Require a secure SECRET_KEY to prevent session hijacking and CSRF vulnerabilities.
+# Fail securely if it is not provided in the environment.
+secret_key = os.environ.get('SECRET_KEY')
+if not secret_key and not app.config.get('TESTING'):
+    raise RuntimeError("CRITICAL SECURITY ERROR: SECRET_KEY environment variable is not set. Refusing to start.")
+app.config['SECRET_KEY'] = secret_key
+
 # 🛡️ Sentinel: Enforce secure session cookie defaults proactively
 app.config.update(
     SESSION_COOKIE_SECURE=True,
