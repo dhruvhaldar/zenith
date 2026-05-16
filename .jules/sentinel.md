@@ -117,3 +117,13 @@
 **Vulnerability:** Implementing an in-memory LRU cache using `collections.OrderedDict` for rate-limiting introduced a race condition in multi-threaded environments. Using the check-then-act pattern (`if key in cache: cache.pop(key)`) allows concurrent requests from the same IP to pass the `if` check, causing the second thread to encounter a `KeyError` on `pop()`, crashing the application and causing a Denial of Service (DoS) under load.
 **Learning:** Checking for dictionary key existence before removal is non-atomic in multi-threaded environments and can lead to unhandled exceptions when another thread removes the key concurrently.
 **Prevention:** When popping elements from a shared dictionary, use atomic methods with safe fallbacks (e.g., `reqs = rate_cache.pop(client_ip, [])`) rather than non-atomic check-then-act logic to avoid `KeyError` race conditions.
+
+## 2026-05-16 - [Serverless Secret Key Configuration]
+**Vulnerability:** In serverless environments, configuring a Flask application's `SECRET_KEY` to use an ephemeral runtime value (e.g., `secrets.token_hex(32)`) as a fallback causes the key to change on every cold start.
+**Learning:** A constantly changing `SECRET_KEY` invalidates all active sessions, signed cookies, and CSRF tokens across instances, breaking stateful functionality in serverless deployments.
+**Prevention:** Avoid ephemeral fallbacks for `SECRET_KEY`. Instead, rely strictly on environment variables (`os.environ.get('SECRET_KEY')`), optionally providing a static fallback (like `'default-insecure-dev-key'`) only for local development ease, ensuring the key remains stable across serverless instances.
+
+## 2026-05-16 - [Hardcoded Secret Key Fallbacks]
+**Vulnerability:** In serverless environments, configuring a Flask application's `SECRET_KEY` to use an ephemeral runtime value causes the key to change on every cold start. While using a static fallback like `'default-insecure-dev-key'` prevents state breakage, it introduces a severe security risk if the environment variable is accidentally omitted in production.
+**Learning:** Hardcoded default secrets are extremely dangerous because they can silently mask misconfigurations, leaving the application running with publicly known keys vulnerable to session hijacking and CSRF attacks.
+**Prevention:** Always fail securely. Require `SECRET_KEY` via environment variables and raise a fatal error (e.g., `RuntimeError`) during application startup if it is missing, ensuring the application cannot start in an insecure state.
