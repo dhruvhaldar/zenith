@@ -14,6 +14,12 @@ from collections import OrderedDict
 
 app = Flask(__name__)
 
+# 🛡️ Sentinel: Require SECRET_KEY to prevent insecure default fallbacks in serverless environments
+secret_key = os.environ.get("SECRET_KEY")
+if not secret_key:
+    raise RuntimeError("CRITICAL: SECRET_KEY environment variable is missing!")
+app.config['SECRET_KEY'] = secret_key
+
 # 🛡️ Sentinel: In-memory LRU cache for rate limiting to prevent DoS attacks
 RATE_LIMIT = 100
 RATE_WINDOW = 60
