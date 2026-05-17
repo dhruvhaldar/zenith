@@ -98,3 +98,6 @@
 ## 2026-05-14 - NumPy scalar function overhead
 **Learning:** Using NumPy mathematical functions (e.g., `np.exp`, `np.sqrt`, `np.log`, `np.expm1`) on scalar values introduces significant dispatch overhead, making them ~2.5x to 4x slower than Python's built-in `math` module equivalents.
 **Action:** When evaluating scalar branches, replace NumPy math functions with their `math` equivalents (e.g., `math.exp`, `math.sqrt`) to eliminate unnecessary scalar dispatch overhead.
+## 2024-05-17 - Avoid redundant timezone replacement overhead
+**Learning:** In high-frequency time calculations (like Local Sidereal Time), unconditionally calling `time.replace(tzinfo=timezone.utc)` creates a new `datetime` object, introducing significant validation and allocation overhead.
+**Action:** When working with timestamp calculations, unconditionally check if the `datetime` object is already in `timezone.utc` using `if time.tzinfo == timezone.utc:`. If it is, call `time.timestamp()` directly to avoid the overhead of `replace`.
