@@ -26,5 +26,6 @@ jobs:
     - name: Run Tests
       env:
         PYTHONPATH: .
+        SECRET_KEY: test_key
       run: |
         pytest tests/
