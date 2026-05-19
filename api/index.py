@@ -29,8 +29,11 @@ def enforce_rate_limit():
     reqs = rate_cache.pop(client_ip, [])
     reqs = [t for t in reqs if now - t < RATE_WINDOW]
 
-    if len(rate_cache) >= MAX_CACHE_SIZE:
-        rate_cache.popitem(last=False)
+    while len(rate_cache) >= MAX_CACHE_SIZE:
+        try:
+            rate_cache.popitem(last=False)
+        except KeyError:
+            break
 
     if len(reqs) >= RATE_LIMIT:
         rate_cache[client_ip] = reqs
