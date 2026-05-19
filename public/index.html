@@ -65,6 +65,30 @@
             margin: 0 2px;
         }
 
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s, visibility 0.3s;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
         /* Target Highlight Animation */
         @keyframes target-highlight {
             0% { background-color: transparent; }
@@ -95,7 +119,7 @@
         </nav>
 
         <h2 id="api-demo" tabindex="-1">Live <abbr title="Application Programming Interface" aria-label="Application Programming Interface" tabindex="0">API</abbr> Demo</h2>
-        <p style="font-size: 0.9em; color: #555;"><span aria-hidden="true">💡</span> Tip: Click or press <kbd>Enter</kbd> on any endpoint path below to instantly copy it to your clipboard.</p>
+        <p style="font-size: 0.9em; color: #555;"><span aria-hidden="true">💡</span> Tip: Click or press <kbd>Enter</kbd> or <kbd>Space</kbd> on any endpoint path below to instantly copy it to your clipboard.</p>
         <ul>
             <li><code translate="no">GET <span class="copyable-text" role="button" title="Copy to clipboard" tabindex="0">/api/snr</span></code> <span aria-hidden="true">-</span> <a href="/api/snr?mag=12&exposure=60" target="_blank" rel="noopener noreferrer" aria-label="Calculate Signal-to-Noise Ratio for Magnitude 12 at 60 seconds (opens in a new tab)" title="Opens in a new tab">Calculate <abbr title="Signal-to-Noise Ratio">SNR</abbr> (<abbr title="Magnitude">Mag</abbr> 12, <abbr title="60 seconds">60s</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
             <li><code translate="no">GET <span class="copyable-text" role="button" title="Copy to clipboard" tabindex="0">/api/transit</span></code> <span aria-hidden="true">-</span> <a href="/api/transit?period=3.5" target="_blank" rel="noopener noreferrer" aria-label="Simulate Transit with a Period of 3.5 days (opens in a new tab)" title="Opens in a new tab">Simulate Transit (<abbr title="Period = 3.5 days">P=3.5d</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
@@ -139,28 +163,38 @@
             <a href="https://github.com/your-username/zenith" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub (opens in a new tab)" title="Opens in a new tab">View on GitHub&nbsp;<span aria-hidden="true">↗</span></a>
         </p>
     </footer>
+    <div id="toast" class="toast" aria-hidden="true"></div>
     <div id="copy-announcer" aria-live="polite" class="sr-only" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"></div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const copyElements = document.querySelectorAll('.copyable-text');
             const announcer = document.getElementById('copy-announcer');
+            const toast = document.getElementById('toast');
 
             copyElements.forEach(el => {
                 const handleCopy = () => {
                     const textToCopy = el.textContent;
                     navigator.clipboard.writeText(textToCopy).then(() => {
-                        // Visual feedback
+                        // Visual feedback (inline)
                         const originalBg = el.style.backgroundColor;
                         el.style.backgroundColor = '#d4edda'; // Light green
+
+                        // Visual feedback (toast)
+                        toast.textContent = `Copied ${textToCopy} to clipboard!`;
+                        toast.classList.add('show');
 
                         // Auditory feedback
                         announcer.textContent = `Copied ${textToCopy} to clipboard`;
 
                         setTimeout(() => {
                             el.style.backgroundColor = originalBg;
+                        }, 500);
+
+                        setTimeout(() => {
+                            toast.classList.remove('show');
                             // Clear announcer after a delay so it doesn't read out old messages if focused later
                             setTimeout(() => announcer.textContent = '', 1000);
-                        }, 500);
+                        }, 2000);
                     }).catch(err => {
                         console.error('Failed to copy text: ', err);
                         announcer.textContent = 'Failed to copy to clipboard';
