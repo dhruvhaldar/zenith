@@ -9,3 +9,7 @@
 ## 2026-05-19 - Explicit visual feedback for interactive elements
 **Learning:** Relying purely on subtle color changes (like a background color flash) to indicate a successful action (like copying text) violates WCAG 1.4.1 (Use of Color) and can be missed by users. While screen readers get `aria-live` announcements, sighted users need clear, explicit visual confirmation.
 **Action:** Always provide explicit visual feedback, such as a Toast notification with text, when a user completes a hidden action like copying to clipboard.
+
+## 2026-05-20 - Ensure exact visible string is included at beginning of aria-labels
+**Learning:** When using `aria-label` on elements that contain visible text, replacing the visible text entirely with an expanded description breaks voice navigation software (like Voice Control or Dragon) because users will say the visible text, but the software won't find a matching accessible name.
+**Action:** Ensure the exact visible string is included at the beginning of the `aria-label` value to support voice control software and comply with WCAG 2.5.3 (Label in Name).
