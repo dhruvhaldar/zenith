@@ -67,8 +67,12 @@ def lookback_time(z, H0=70.0, omega_m=0.3, omega_l=0.7):
     # to eliminate computationally expensive numerical integration (quad).
     # age t(z) = (2 / (3 H0 sqrt(Omega_L))) * asinh( sqrt(Omega_L / Omega_M) * (1+z)^(-3/2) )
     if omega_m > 0 and omega_l > 0:
-        t_age_0 = (2.0 / (3.0 * math.sqrt(omega_l))) * math.asinh(math.sqrt(omega_l / omega_m))
-        t_age_z = (2.0 / (3.0 * math.sqrt(omega_l))) * math.asinh(math.sqrt(omega_l / omega_m) * ((1.0+z)**-1.5))
+        sqrt_l = math.sqrt(omega_l)
+        coef = 2.0 / (3.0 * sqrt_l)
+        sqrt_lm = math.sqrt(omega_l / omega_m)
+
+        t_age_0 = coef * math.asinh(sqrt_lm)
+        t_age_z = coef * math.asinh(sqrt_lm * ((1.0+z)**-1.5))
         result = t_age_0 - t_age_z
         return result / h0_gyr
     else:
