@@ -98,3 +98,6 @@
 ## 2026-05-14 - NumPy scalar function overhead
 **Learning:** Using NumPy mathematical functions (e.g., `np.exp`, `np.sqrt`, `np.log`, `np.expm1`) on scalar values introduces significant dispatch overhead, making them ~2.5x to 4x slower than Python's built-in `math` module equivalents.
 **Action:** When evaluating scalar branches, replace NumPy math functions with their `math` equivalents (e.g., `math.exp`, `math.sqrt`) to eliminate unnecessary scalar dispatch overhead.
+## 2024-05-31 - Common Subexpression Elimination for Math Operations
+**Learning:** Evaluating the same mathematical function (like `math.sqrt`) multiple times with the same arguments within a single block introduces redundant computational overhead, especially if the operations are wrapped in an LRU cache where cache-misses can still be expensive during array sweeps.
+**Action:** Apply Common Subexpression Elimination (CSE). Identify repeated mathematical calculations, evaluate them once, and store the result in a local variable to be reused throughout the function.
