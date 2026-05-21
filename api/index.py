@@ -129,6 +129,11 @@ def handle_exception(e):
 # 🛡️ Sentinel: Add global security headers for defense in depth
 @app.after_request
 def add_security_headers(response):
+    # 🛡️ Sentinel: Add CORS headers to allow cross-origin requests to the API
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+
     # 🛡️ Sentinel: Enforce application/json to prevent implicit text/html MIME-sniffing/XSS on implicit OPTIONS
     if request.method == 'OPTIONS' and response.mimetype == 'text/html':
         response.mimetype = 'application/json'
@@ -183,8 +188,10 @@ def home():
         "endpoints": ["/api/snr", "/api/transit", "/api/hubble"]
     })
 
-@app.route('/api/snr')
+@app.route('/api/snr', methods=['GET', 'OPTIONS'])
 def get_snr():
+    if request.method == 'OPTIONS':
+        return '', 204
     try:
         # 🛡️ Sentinel: Input validation with reasonable boundaries to prevent DoS via huge values
         mag = safe_get_float(request.args, 'mag', 12.0)
@@ -214,8 +221,10 @@ def get_snr():
         "snr": snr
     })
 
-@app.route('/api/transit')
+@app.route('/api/transit', methods=['GET', 'OPTIONS'])
 def get_transit():
+    if request.method == 'OPTIONS':
+        return '', 204
     try:
         # 🛡️ Sentinel: Input validation with limits
         period = safe_get_float(request.args, 'period', 4.0)
@@ -238,8 +247,10 @@ def get_transit():
         "transit_duration_hours": sim.duration / 3600.0
     })
 
-@app.route('/api/hubble')
+@app.route('/api/hubble', methods=['GET', 'OPTIONS'])
 def get_hubble():
+    if request.method == 'OPTIONS':
+        return '', 204
     try:
         # 🛡️ Sentinel: Input validation with limits
         d = safe_get_float(request.args, 'd', 10.0)
