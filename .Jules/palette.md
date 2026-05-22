@@ -90,3 +90,7 @@
 ## 2026-05-05 - Explicit Dimensions for Lazy Images
 **Learning:** When adding `loading="lazy"` to defer offscreen images, failing to specify explicit `width` and `height` attributes causes severe layout shifts (Cumulative Layout Shift - CLS). Because the browser defers loading the image, it cannot calculate its dimensions until the user scrolls and the image downloads, causing content below to abruptly jump down as the image renders, destroying the reading experience.
 **Action:** Always pair `loading="lazy"` with explicit `width` and `height` attributes on the `<img>` tag. Combine this with CSS `max-width: 100%; height: auto;` to maintain responsive scaling while still allowing the browser to pre-calculate and reserve the correct aspect-ratio space before the image loads.
+
+## 2026-05-22 - State Management in Micro-Interactions
+**Learning:** When implementing brief visual feedback for micro-interactions (like flashing a background color on click), relying on inline styles and unmanaged `setTimeout` calls leads to permanent visual bugs if the user triggers the action again before the timeout expires. The original inline style gets overwritten by the mid-animation state.
+**Action:** Always extract temporary visual states into CSS classes (e.g., `.success`) rather than manipulating inline styles directly. Crucially, always store `setTimeout` IDs in variables and call `clearTimeout()` at the start of the interaction handler to ensure fresh states and prevent overlapping timeouts from cancelling animations prematurely.
