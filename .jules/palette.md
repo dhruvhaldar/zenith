@@ -13,3 +13,7 @@
 ## 2026-05-20 - Ensure exact visible string is included at beginning of aria-labels
 **Learning:** When using `aria-label` on elements that contain visible text, replacing the visible text entirely with an expanded description breaks voice navigation software (like Voice Control or Dragon) because users will say the visible text, but the software won't find a matching accessible name.
 **Action:** Ensure the exact visible string is included at the beginning of the `aria-label` value to support voice control software and comply with WCAG 2.5.3 (Label in Name).
+
+## 2026-05-21 - Accessible Keyboard Interaction Hints
+**Learning:** Providing a visual hint (like `<kbd>Enter</kbd> or <kbd>Space</kbd>`) for a custom interactive element is good UX, but screen reader users won't associate that global hint text with the specific interactive element when they focus it. Furthermore, adding `aria-label` to elements that have visible text content (like the endpoint paths) must include the visible text string at the start to satisfy WCAG 2.5.3 (Label in Name) for voice control users.
+**Action:** When creating custom interactive elements (like `role="button"` spans) that have specific keyboard bindings, always explicitly add `aria-keyshortcuts="Enter Space"` to programmatically associate the bindings with the element. Additionally, always prepend the visible text of the element to any custom `aria-label` (e.g., `aria-label="/api/snr - Copy to clipboard"`).
