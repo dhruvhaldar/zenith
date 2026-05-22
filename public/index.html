@@ -89,6 +89,10 @@
             bottom: 50px;
         }
 
+        .copy-success {
+            background-color: #d4edda !important;
+        }
+
         /* Target Highlight Animation */
         @keyframes target-highlight {
             0% { background-color: transparent; }
@@ -171,13 +175,22 @@
             const announcer = document.getElementById('copy-announcer');
             const toast = document.getElementById('toast');
 
+            let toastTimeout;
+            let announcerTimeout;
+
             copyElements.forEach(el => {
+                let bgTimeout;
+
                 const handleCopy = () => {
                     const textToCopy = el.textContent;
                     navigator.clipboard.writeText(textToCopy).then(() => {
+                        // Clear existing timeouts
+                        clearTimeout(bgTimeout);
+                        clearTimeout(toastTimeout);
+                        clearTimeout(announcerTimeout);
+
                         // Visual feedback (inline)
-                        const originalBg = el.style.backgroundColor;
-                        el.style.backgroundColor = '#d4edda'; // Light green
+                        el.classList.add('copy-success');
 
                         // Visual feedback (toast)
                         toast.textContent = `Copied ${textToCopy} to clipboard!`;
@@ -186,14 +199,14 @@
                         // Auditory feedback
                         announcer.textContent = `Copied ${textToCopy} to clipboard`;
 
-                        setTimeout(() => {
-                            el.style.backgroundColor = originalBg;
+                        bgTimeout = setTimeout(() => {
+                            el.classList.remove('copy-success');
                         }, 500);
 
-                        setTimeout(() => {
+                        toastTimeout = setTimeout(() => {
                             toast.classList.remove('show');
                             // Clear announcer after a delay so it doesn't read out old messages if focused later
-                            setTimeout(() => announcer.textContent = '', 1000);
+                            announcerTimeout = setTimeout(() => announcer.textContent = '', 1000);
                         }, 2000);
                     }).catch(err => {
                         console.error('Failed to copy text: ', err);
