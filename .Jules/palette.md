@@ -94,3 +94,7 @@
 ## 2026-05-22 - State Management in Micro-Interactions
 **Learning:** When implementing brief visual feedback for micro-interactions (like flashing a background color on click), relying on inline styles and unmanaged `setTimeout` calls leads to permanent visual bugs if the user triggers the action again before the timeout expires. The original inline style gets overwritten by the mid-animation state.
 **Action:** Always extract temporary visual states into CSS classes (e.g., `.success`) rather than manipulating inline styles directly. Crucially, always store `setTimeout` IDs in variables and call `clearTimeout()` at the start of the interaction handler to ensure fresh states and prevent overlapping timeouts from cancelling animations prematurely.
+
+## 2026-05-23 - Visual Feedback for Async Failures
+**Learning:** When using async browser APIs like `navigator.clipboard.writeText`, failures are silent for sighted users if only an `aria-live` announcement or console error is used.
+**Action:** Always pair auditory error announcements with explicit visual feedback (like an error toast) when catching exceptions from async micro-interactions to ensure all users receive state changes.
