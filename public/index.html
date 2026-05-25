@@ -5,107 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenith Astronomy Toolkit</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔭</text></svg>">
-    <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
-        h1 { color: #333; }
-        .artifact { margin-bottom: 40px; }
-        figure { margin: 0; margin-top: 10px; }
-        figcaption { font-style: italic; color: #555; margin-top: 8px; font-size: 0.9em; }
-        img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
-        code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
-        a { color: #0056b3; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; transition: color 0.2s ease, text-decoration-thickness 0.2s ease; }
-        a:hover { text-decoration-thickness: 2px; color: #003d82; }
-        a:focus-visible { outline: 3px solid #0056b3; outline-offset: 3px; border-radius: 2px; text-decoration-thickness: 2px; }
-        abbr[title] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; }
-        abbr[title]:focus-visible { outline: 3px solid #0056b3; outline-offset: 3px; border-radius: 2px; }
-        a abbr[title] { cursor: inherit; }
-        .copyable-text {
-            user-select: all;
-            -webkit-user-select: all;
-            cursor: copy;
-            padding: 2px 4px;
-            border-radius: 3px;
-            transition: background-color 0.2s ease;
-        }
-        .copyable-text:hover, .copyable-text:focus-visible {
-            background-color: #e0e0e0;
-            outline: 2px solid #0056b3;
-            outline-offset: 1px;
-        }
-        @media (prefers-reduced-motion: no-preference) {
-            html { scroll-behavior: smooth; }
-            :target:not(body) {
-                animation: target-highlight 2s ease-out;
-                border-radius: 4px;
-            }
-        }
-        [id] { scroll-margin-top: 2rem; }
-        [tabindex="-1"]:focus { outline: none; }
-        a[href="#main-content"] { position: absolute; left: -9999px; z-index: 999; }
-        a[href="#main-content"]:focus-visible {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: white;
-            padding: 10px;
-            border: 2px solid #0056b3;
-            border-radius: 4px;
-        }
-
-        kbd {
-            background-color: #f7f7f7;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-            color: #333;
-            display: inline-block;
-            font-size: 0.85em;
-            font-family: monospace;
-            padding: 2px 5px;
-            margin: 0 2px;
-        }
-
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 4px;
-            padding: 12px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 0.9em;
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s, visibility 0.3s;
-        }
-
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 50px;
-        }
-
-        .copy-success {
-            background-color: #d4edda !important;
-            color: #155724;
-        }
-
-        .copy-error {
-            background-color: #f8d7da !important;
-            color: #721c24;
-        }
-
-        /* Target Highlight Animation */
-        @keyframes target-highlight {
-            0% { background-color: transparent; }
-            30% { background-color: rgba(255, 215, 0, 0.4); }
-            100% { background-color: transparent; }
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body id="top" tabindex="-1">
     <a href="#main-content">Skip to main content</a>
@@ -129,7 +29,7 @@
         </nav>
 
         <h2 id="api-demo" tabindex="-1">Live <abbr title="Application Programming Interface" aria-label="API - Application Programming Interface" tabindex="0">API</abbr> Demo</h2>
-        <p style="font-size: 0.9em; color: #555;"><span aria-hidden="true">💡</span> Tip: Click or press <kbd>Enter</kbd> or <kbd>Space</kbd> on any endpoint path below to instantly copy it to your clipboard.</p>
+        <p class="tip"><span aria-hidden="true">💡</span> Tip: Click or press <kbd>Enter</kbd> or <kbd>Space</kbd> on any endpoint path below to instantly copy it to your clipboard.</p>
         <ul>
             <li><code translate="no">GET <span class="copyable-text" role="button" aria-label="/api/snr - Copy to clipboard" aria-keyshortcuts="Enter Space" title="Copy to clipboard" tabindex="0">/api/snr</span></code> <span aria-hidden="true">-</span> <a href="/api/snr?mag=12&exposure=60" target="_blank" rel="noopener noreferrer" aria-label="Calculate SNR (Mag 12, 60s) - Calculate Signal-to-Noise Ratio for Magnitude 12 at 60 seconds (opens in a new tab)" title="Opens in a new tab">Calculate <abbr title="Signal-to-Noise Ratio">SNR</abbr> (<abbr title="Magnitude">Mag</abbr> 12, <abbr title="60 seconds">60s</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
             <li><code translate="no">GET <span class="copyable-text" role="button" aria-label="/api/transit - Copy to clipboard" aria-keyshortcuts="Enter Space" title="Copy to clipboard" tabindex="0">/api/transit</span></code> <span aria-hidden="true">-</span> <a href="/api/transit?period=3.5" target="_blank" rel="noopener noreferrer" aria-label="Simulate Transit (P=3.5d) - Simulate Transit with a Period of 3.5 days (opens in a new tab)" title="Opens in a new tab">Simulate Transit (<abbr title="Period = 3.5 days">P=3.5d</abbr>)&nbsp;<span aria-hidden="true">↗</span></a></li>
@@ -174,7 +74,7 @@
         </p>
     </footer>
     <div id="toast" class="toast" aria-hidden="true"></div>
-    <div id="copy-announcer" aria-live="polite" class="sr-only" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"></div>
+    <div id="copy-announcer" aria-live="polite" class="sr-only"></div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const copyElements = document.querySelectorAll('.copyable-text');
