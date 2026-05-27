@@ -19,9 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Visual feedback (inline)
                 el.classList.add('copy-success');
+                if (!el.hasAttribute('data-original-title')) {
+                    const originalTitle = el.getAttribute('title');
+                    if (originalTitle) {
+                        el.setAttribute('data-original-title', originalTitle);
+                    } else {
+                        el.setAttribute('data-original-title', '');
+                    }
+                }
+                el.setAttribute('title', 'Copied!');
 
                 // Visual feedback (toast)
                 toast.textContent = `Copied ${textToCopy} to clipboard!`;
+                toast.classList.remove('copy-error');
                 toast.classList.add('show');
 
                 // Auditory feedback
@@ -29,7 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 bgTimeout = setTimeout(() => {
                     el.classList.remove('copy-success');
-                }, 500);
+                    const originalTitle = el.getAttribute('data-original-title');
+                    if (originalTitle) {
+                        el.setAttribute('title', originalTitle);
+                    } else {
+                        el.removeAttribute('title');
+                    }
+                    el.removeAttribute('data-original-title');
+                }, 2000);
 
                 toastTimeout = setTimeout(() => {
                     toast.classList.remove('show');
