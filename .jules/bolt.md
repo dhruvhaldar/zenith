@@ -101,3 +101,7 @@
 ## 2024-05-31 - Common Subexpression Elimination for Math Operations
 **Learning:** Evaluating the same mathematical function (like `math.sqrt`) multiple times with the same arguments within a single block introduces redundant computational overhead, especially if the operations are wrapped in an LRU cache where cache-misses can still be expensive during array sweeps.
 **Action:** Apply Common Subexpression Elimination (CSE). Identify repeated mathematical calculations, evaluate them once, and store the result in a local variable to be reused throughout the function.
+
+## 2027-02-09 - Mathematically Grouping Scalars to Prevent Array Iteration
+**Learning:** When applying arithmetic operations sequentially (e.g., `res = array1; res *= scalar1; res *= scalar2`), NumPy allocates temporary operations causing a full array iteration per arithmetic operator. When working with broadcasting functions that combine scalars and arrays, failing to combine operations means redundant passes over the array length.
+**Action:** Before performing multiple arithmetic operations on an array (e.g., scalar addition, scalar multiplication), always check `isinstance()` combinations and mathematically pre-calculate all grouped scalar additions or multiplications into a single constant. Apply this single constant to the array to eliminate redundant intermediate iterations and allocations, providing measurable CPU/memory bandwidth savings.
