@@ -131,3 +131,8 @@
 **Vulnerability:** The application's `vercel.json` configuration set the `Content-Security-Policy` header's `style-src` directive to allow `'unsafe-inline'`. Additionally, `public/index.html` contained an inline `<style>` block and inline `style="..."` attributes on elements. This weakens the CSP, making it easier for an attacker to inject and execute malicious CSS (which can lead to data exfiltration or UI redress attacks) if an injection vulnerability exists.
 **Learning:** Permitting `'unsafe-inline'` in `style-src` significantly degrades the defensive capability of a Content Security Policy.
 **Prevention:** Always maintain a strict CSP without `'unsafe-inline'`. Extract inline style blocks to external `.css` files and replace inline style attributes with CSS classes.
+
+## 2026-05-28 - [Rate Limit Bypass via LRU Cache Race Condition]
+**Vulnerability:** Implementing an in-memory rate limiter using `collections.OrderedDict` without synchronization allowed a race condition. When concurrent requests from the same IP arrived, multiple threads could read the cache simultaneously, find an empty history, and overwrite the entry with a single request timestamp. This effectively reset the rate limit counter on every concurrent request, completely bypassing the DoS protection.
+**Learning:** Atomic dictionary methods (like `.pop()`) are insufficient for multi-step read-modify-write operations in an LRU cache. The entire logical block must be synchronized to prevent state corruption.
+**Prevention:** Always use a `threading.Lock` (`with lock:`) around the entire cache access, validation, modification, and re-insertion logic to guarantee thread safety and prevent rate limit bypasses in multi-threaded environments.
