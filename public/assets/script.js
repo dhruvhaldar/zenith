@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(announcerTimeout);
 
                 // Visual feedback (inline)
+                el.classList.remove('copy-error');
                 el.classList.add('copy-success');
                 if (!el.hasAttribute('data-original-title')) {
                     const originalTitle = el.getAttribute('title');
@@ -56,25 +57,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
 
-            // Clear existing timeouts
-            clearTimeout(bgTimeout);
-            clearTimeout(toastTimeout);
-            clearTimeout(announcerTimeout);
+                // Clear existing timeouts
+                clearTimeout(bgTimeout);
+                clearTimeout(toastTimeout);
+                clearTimeout(announcerTimeout);
 
-            // Visual feedback (toast)
-            toast.textContent = 'Failed to copy to clipboard';
-            toast.classList.add('copy-error');
-            toast.classList.add('show');
+                // Visual feedback (inline)
+                el.classList.remove('copy-success');
+                el.classList.add('copy-error');
+                if (!el.hasAttribute('data-original-title')) {
+                    const originalTitle = el.getAttribute('title');
+                    if (originalTitle) {
+                        el.setAttribute('data-original-title', originalTitle);
+                    } else {
+                        el.setAttribute('data-original-title', '');
+                    }
+                }
+                el.setAttribute('title', 'Failed to copy!');
 
-            // Auditory feedback
+                // Visual feedback (toast)
+                toast.textContent = 'Failed to copy to clipboard';
+                toast.classList.add('copy-error');
+                toast.classList.add('show');
+
+                // Auditory feedback
                 announcer.textContent = 'Failed to copy to clipboard';
 
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-                toast.classList.remove('copy-error');
-                // Clear announcer after a delay
-                announcerTimeout = setTimeout(() => announcer.textContent = '', 1000);
-            }, 2000);
+                bgTimeout = setTimeout(() => {
+                    el.classList.remove('copy-error');
+                    const originalTitle = el.getAttribute('data-original-title');
+                    if (originalTitle) {
+                        el.setAttribute('title', originalTitle);
+                    } else {
+                        el.removeAttribute('title');
+                    }
+                    el.removeAttribute('data-original-title');
+                }, 2000);
+
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.classList.remove('copy-error');
+                    // Clear announcer after a delay
+                    announcerTimeout = setTimeout(() => announcer.textContent = '', 1000);
+                }, 2000);
             });
         };
 
