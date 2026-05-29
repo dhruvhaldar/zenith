@@ -140,8 +140,6 @@ def add_security_headers(response):
     # 🛡️ Sentinel: Enforce application/json to prevent implicit text/html MIME-sniffing/XSS on implicit OPTIONS
     if request.method == 'OPTIONS' and response.mimetype == 'text/html':
         response.mimetype = 'application/json'
-        if response.data == b'':
-            response.set_data(b'{}')
 
     # Prevent clickjacking attacks
     response.headers['X-Frame-Options'] = 'DENY'
