@@ -136,3 +136,8 @@
 **Vulnerability:** Implementing an in-memory rate limiter using `collections.OrderedDict` without synchronization allowed a race condition. When concurrent requests from the same IP arrived, multiple threads could read the cache simultaneously, find an empty history, and overwrite the entry with a single request timestamp. This effectively reset the rate limit counter on every concurrent request, completely bypassing the DoS protection.
 **Learning:** Atomic dictionary methods (like `.pop()`) are insufficient for multi-step read-modify-write operations in an LRU cache. The entire logical block must be synchronized to prevent state corruption.
 **Prevention:** Always use a `threading.Lock` (`with lock:`) around the entire cache access, validation, modification, and re-insertion logic to guarantee thread safety and prevent rate limit bypasses in multi-threaded environments.
+
+## 2026-05-29 - [HTTP Protocol Violation on 204 Responses]
+**Vulnerability:** The application was setting a response body (b'{}') when intercepting and modifying the Content-Type of implicit OPTIONS requests, even when those requests returned a 204 No Content status code. Returning a body with a 204 status violates the HTTP protocol and can cause issues with client behavior or proxy handling.
+**Learning:** When mitigating MIME-sniffing by modifying response properties globally, it is important to respect HTTP protocol semantics, such as avoiding bodies on 204 responses.
+**Prevention:** When handling HTTP `OPTIONS` preflight requests or returning `204 No Content` status codes in Flask, do not append a body or set `response.data` (e.g., to `b'{}'`), as returning a body with a 204 status violates the HTTP protocol.
