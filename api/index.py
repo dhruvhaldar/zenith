@@ -41,7 +41,7 @@ def enforce_rate_limit():
         if len(reqs) >= RATE_LIMIT:
             rate_cache[client_ip] = reqs
             app.logger.warning(f"Rate limit exceeded by {client_ip} on {request.method} {request.path}")
-            return jsonify({"error": "Too Many Requests"}), 429
+            return jsonify({"error": "Too Many Requests"}), 429, {'Retry-After': str(RATE_WINDOW)}
 
         reqs.append(now)
         rate_cache[client_ip] = reqs
