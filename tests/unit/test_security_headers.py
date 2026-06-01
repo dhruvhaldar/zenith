@@ -14,7 +14,7 @@ def test_security_headers_root(client):
     assert response.headers.get('X-Frame-Options') == 'DENY'
     assert response.headers.get('X-Content-Type-Options') == 'nosniff'
     assert response.headers.get('Strict-Transport-Security') == 'max-age=31536000; includeSubDomains; preload'
-    assert response.headers.get('Content-Security-Policy') == "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
+    assert response.headers.get('Content-Security-Policy') == "default-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
 
 def test_security_headers_api_endpoint(client):
     """Test that security headers are applied to an API route."""
@@ -23,7 +23,7 @@ def test_security_headers_api_endpoint(client):
     assert response.headers.get('X-Frame-Options') == 'DENY'
     assert response.headers.get('X-Content-Type-Options') == 'nosniff'
     assert response.headers.get('Strict-Transport-Security') == 'max-age=31536000; includeSubDomains; preload'
-    assert response.headers.get('Content-Security-Policy') == "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
+    assert response.headers.get('Content-Security-Policy') == "default-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
 
 def test_security_headers_error_response(client):
     """Test that security headers are applied even on error responses."""
@@ -32,7 +32,7 @@ def test_security_headers_error_response(client):
     assert response.headers.get('X-Frame-Options') == 'DENY'
     assert response.headers.get('X-Content-Type-Options') == 'nosniff'
     assert response.headers.get('Strict-Transport-Security') == 'max-age=31536000; includeSubDomains; preload'
-    assert response.headers.get('Content-Security-Policy') == "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
+    assert response.headers.get('Content-Security-Policy') == "default-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
 
 def test_security_headers_additional_headers(client):
     """Test that additional security headers are applied to the root route."""
