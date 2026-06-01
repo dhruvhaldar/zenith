@@ -148,7 +148,7 @@ def add_security_headers(response):
     # Enforce HTTPS connections
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload'
     # Prevent XSS and data injection attacks
-    response.headers['Content-Security-Policy'] = "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
+    response.headers['Content-Security-Policy'] = "default-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
     # Prevent leaking information in the referer header
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     # Restrict access to browser features
