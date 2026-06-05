@@ -86,23 +86,25 @@ class Telescope:
         # Area of a pixel in arcsec^2
         # ⚡ Bolt: Use explicit multiplication to avoid small integer power overhead
         pixel_area_arcsec = pixel_scale * pixel_scale
-        # ⚡ Bolt: Combined all scalar constants before array multiplication
-        C_sky = ZERO_MAG_FLUX * self.area * exposure * ccd.qe * pixel_area_arcsec
-        # Photons from sky per pixel
-        # ⚡ Bolt: Eliminate temporary array creation overhead during array exponentiation
-        if isinstance(sky_mag, np.ndarray):
-            photons_sky_pixel = sky_mag * -0.9210340371976183
-            np.exp(photons_sky_pixel, out=photons_sky_pixel)
-            photons_sky_pixel *= C_sky
-        else:
-            photons_sky_pixel = C_sky * math.exp(-0.9210340371976183 * sky_mag)
+
         # Assuming star light is concentrated in a certain number of pixels (aperture photometry)
         # Let's assume a seeing disk of roughly 2 arcsec diameter, area ~ pi*1^2 = 3.14 arcsec^2
         # Number of pixels for aperture
         n_pixels = 3.14 / pixel_area_arcsec
         if n_pixels < 1: n_pixels = 1
 
-        total_sky_photons = photons_sky_pixel * n_pixels
+        # ⚡ Bolt: Combined all scalar constants (including n_pixels) before array multiplication
+        # to eliminate redundant intermediate array iterations and temporary arrays.
+        C_sky_total = ZERO_MAG_FLUX * self.area * exposure * ccd.qe * pixel_area_arcsec * n_pixels
+
+        # Photons from sky for all pixels in aperture
+        # ⚡ Bolt: Eliminate temporary array creation overhead during array exponentiation
+        if isinstance(sky_mag, np.ndarray):
+            total_sky_photons = sky_mag * -0.9210340371976183
+            np.exp(total_sky_photons, out=total_sky_photons)
+            total_sky_photons *= C_sky_total
+        else:
+            total_sky_photons = C_sky_total * math.exp(-0.9210340371976183 * sky_mag)
 
         # c. Dark Current
         dark_electrons = ccd.dark_current * exposure * n_pixels
