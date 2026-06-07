@@ -117,6 +117,14 @@ def absolute_magnitude(m, d):
     """
     if isinstance(m, np.ndarray) or isinstance(d, np.ndarray):
         res = np.empty(np.broadcast(m, d).shape, dtype=float)
+        # ⚡ Bolt: If d is scalar, pre-calculate the scalar log term using np.log
+        # to completely eliminate redundant array broadcasting and logarithm evaluation,
+        # while preserving numpy's NaN propagation for invalid values.
+        if isinstance(d, (float, int, np.floating, np.integer)):
+            scalar_term = 5.0 - 2.171472409516259 * np.log(d)
+            np.add(m, scalar_term, out=res)
+            return res
+
         np.log(d, out=res)
         res *= -2.171472409516259
         # ⚡ Bolt: Mathematically group scalar values to eliminate an intermediate array iteration.
