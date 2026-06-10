@@ -24,6 +24,16 @@ rate_limit_lock = Lock()
 
 @app.before_request
 def enforce_rate_limit():
+    # 🛡️ Sentinel: Enforce maximum URL length to prevent buffer overflows or DoS
+    if len(request.url) > 2048:
+        app.logger.warning(f"URL length exceeded by {request.remote_addr}")
+        return jsonify({"error": "URI Too Long"}), 414
+
+    # 🛡️ Sentinel: Enforce maximum number of query parameters to prevent Hash Collision DoS
+    if len(request.args) > 20:
+        app.logger.warning(f"Too many query parameters from {request.remote_addr}")
+        return jsonify({"error": "Too Many Query Parameters"}), 400
+
     client_ip = request.remote_addr or "Unknown IP"
     now = time.time()
 
@@ -192,7 +202,7 @@ def home():
 @app.route('/api/snr', methods=['GET', 'OPTIONS'])
 def get_snr():
     if request.method == 'OPTIONS':
-        return '', 204
+        return app.response_class(status=204)
     try:
         # 🛡️ Sentinel: Input validation with reasonable boundaries to prevent DoS via huge values
         mag = safe_get_float(request.args, 'mag', 12.0)
@@ -225,7 +235,7 @@ def get_snr():
 @app.route('/api/transit', methods=['GET', 'OPTIONS'])
 def get_transit():
     if request.method == 'OPTIONS':
-        return '', 204
+        return app.response_class(status=204)
     try:
         # 🛡️ Sentinel: Input validation with limits
         period = safe_get_float(request.args, 'period', 4.0)
@@ -251,7 +261,7 @@ def get_transit():
 @app.route('/api/hubble', methods=['GET', 'OPTIONS'])
 def get_hubble():
     if request.method == 'OPTIONS':
-        return '', 204
+        return app.response_class(status=204)
     try:
         # 🛡️ Sentinel: Input validation with limits
         d = safe_get_float(request.args, 'd', 10.0)
