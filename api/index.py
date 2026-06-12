@@ -68,11 +68,6 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Lax',
 )
 
-# 🛡️ Sentinel: Fail securely if SECRET_KEY is missing.
-# Do not use ephemeral (secrets.token_hex) or hardcoded string fallbacks.
-app.secret_key = os.environ.get('SECRET_KEY')
-if not app.secret_key:
-    raise RuntimeError("CRITICAL: SECRET_KEY environment variable is missing.")
 
 import logging
 import re
