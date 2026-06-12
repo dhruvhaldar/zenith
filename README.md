@@ -19,7 +19,7 @@ This project implements the maximal syllabus, focusing on the mathematical model
 ## 🚀 Installation
 
 ```bash
-git clone https://github.com/your-username/zenith.git
+git clone https://github.com/dhruvhaldar/zenith.git
 cd zenith
 pip install -r requirements.txt
 ```
