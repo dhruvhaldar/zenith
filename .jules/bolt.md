@@ -111,3 +111,7 @@
 ## 2027-04-14 - Algebraically Factoring Scalar Multipliers
 **Learning:** When performing repeated mathematical operations in pure Python that involve multiplying a constant coefficient across multiple terms before subtracting them (e.g., `(coef * a) - (coef * b)`), Python evaluates the floating-point multiplication multiple times.
 **Action:** Algebraically factor out the common scalar multiplier (e.g., `coef * (a - b)`) to eliminate redundant floating point operations. This significantly improves performance on cache-miss execution paths by trading multiple complex multiplications for a single multiplication and a subtraction.
+
+## 2027-04-14 - Trigonometric Simplification in Atan2
+**Learning:** When calculating an angle using `atan2(Y, X)` where one of the arguments involves a division (like `X = (sin_A / cos_A) * ...`), the division introduces execution overhead. Since `atan2` only depends on the ratio of Y and X, both terms can be multiplied by a strictly non-negative term (like `cos_A` where A is bounded between -90 and 90 degrees) to eliminate the division without affecting the quadrant.
+**Action:** Optimize `atan2` calculations by algebraically eliminating divisions, multiplying both arguments by the divisor to remove the overhead.

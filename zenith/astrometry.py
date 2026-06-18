@@ -90,9 +90,10 @@ def ra_dec_to_alt_az(ra, dec, lat, lon, time):
     # X = tan(delta)cos(phi) - sin(phi)cos(H)
     # Az = atan2(Y, X)
 
-    Y = -sin_ha
-    # Using tan(dec) = sin(dec) / cos(dec)
-    X = (sin_dec / cos_dec) * cos_lat - sin_lat * cos_ha
+    # ⚡ Bolt: Eliminate slow division by multiplying both terms by cos_dec
+    # Since dec is between -90 and 90, cos_dec >= 0, meaning signs of Y/X are preserved for atan2
+    Y = -sin_ha * cos_dec
+    X = sin_dec * cos_lat - sin_lat * cos_ha * cos_dec
 
     az_rad = math.atan2(Y, X)
 
