@@ -92,6 +92,7 @@ def test_cors_headers(client):
     assert response.headers.get('Access-Control-Allow-Origin') == '*'
     assert response.headers.get('Access-Control-Allow-Methods') == 'GET, OPTIONS'
     assert response.headers.get('Access-Control-Allow-Headers') == 'Content-Type, Authorization'
+    assert response.headers.get('Access-Control-Max-Age') == '86400'
 
 def test_cors_headers_get(client):
     """Test that CORS headers are applied to an API route."""
@@ -100,3 +101,4 @@ def test_cors_headers_get(client):
     assert response.headers.get('Access-Control-Allow-Origin') == '*'
     assert response.headers.get('Access-Control-Allow-Methods') == 'GET, OPTIONS'
     assert response.headers.get('Access-Control-Allow-Headers') == 'Content-Type, Authorization'
+    assert response.headers.get('Access-Control-Max-Age') == '86400'
