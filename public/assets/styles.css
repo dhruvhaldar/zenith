@@ -16,13 +16,33 @@
             -webkit-user-select: all;
             cursor: copy;
             padding: 2px 4px;
+            padding-right: 24px;
             border-radius: 3px;
             transition: background-color 0.2s ease;
+            position: relative;
+            display: inline-block;
+        }
+        .copyable-text::after {
+            content: "";
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
         }
         .copyable-text:hover, .copyable-text:focus-visible {
             background-color: #e0e0e0;
             outline: 2px solid #0056b3;
             outline-offset: 1px;
+        }
+        .copyable-text:hover::after, .copyable-text:focus-visible::after {
+            opacity: 1;
         }
         @media (prefers-reduced-motion: no-preference) {
             html { scroll-behavior: smooth; }
@@ -86,9 +106,19 @@
             color: #155724;
         }
 
+        .copy-success::after {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23155724" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+            opacity: 1;
+        }
+
         .copy-error {
             background-color: #f8d7da !important;
             color: #721c24;
+        }
+
+        .copy-error::after {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23721c24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>');
+            opacity: 1;
         }
 
         /* Target Highlight Animation */

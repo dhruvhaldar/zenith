@@ -125,3 +125,7 @@
 ## 2026-05-27 - Explicit visual feedback reset in micro-interactions
 **Learning:** When implementing brief visual feedback for JavaScript micro-interactions (like a temporary background color change on click or a toast message), failure to reset previous state classes (like error classes) can lead to conflicting visual states. Also, tooltip updates during an interaction provide immediate confirmation without users needing to look away.
 **Action:** Always explicitly remove potential conflicting state classes (like error classes on success, or success on error) before adding new states. Provide immediate, inline confirmation by temporarily updating properties like 'title' during a successful interaction.
+
+## 2026-05-28 - CSS Icons for Selectable Text
+**Learning:** When making text one-click copyable using `user-select: all`, you cannot add visual affordances (like copy icons) by inserting actual text or emojis into the DOM (e.g. `content: " 📋"` or appending `<span>📋</span>`), because the icon will be inadvertently selected and copied by the user's browser or `element.textContent` logic.
+**Action:** Always implement visual indicators for selectable elements using CSS pseudo-elements (like `::after`) and apply the icon using a `background-image` (e.g., an inline data SVG) instead of the `content` property. This perfectly separates the visual affordance from the selectable text node.
