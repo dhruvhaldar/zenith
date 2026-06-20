@@ -115,3 +115,11 @@
 ## 2027-04-14 - Trigonometric Simplification in Atan2
 **Learning:** When calculating an angle using `atan2(Y, X)` where one of the arguments involves a division (like `X = (sin_A / cos_A) * ...`), the division introduces execution overhead. Since `atan2` only depends on the ratio of Y and X, both terms can be multiplied by a strictly non-negative term (like `cos_A` where A is bounded between -90 and 90 degrees) to eliminate the division without affecting the quadrant.
 **Action:** Optimize `atan2` calculations by algebraically eliminating divisions, multiplying both arguments by the divisor to remove the overhead.
+
+## 2027-04-14 - Pre-calculating loop-invariant math in classes
+**Learning:** In optimization contexts where methods are called frequently (like light curve generation over thousands of time steps or Monte Carlo samplers), calculating scalar expressions that rely solely on static class attributes wastes CPU cycles.
+**Action:** Move loop-invariant variables out of the execution method and into the `__init__` method, saving the pre-calculated constant as a private attribute (e.g., `self._c1`) to significantly reduce repetitive floating-point arithmetic overhead on each call.
+
+## 2027-04-14 - Redundant bounds removal breaks semantic correctness
+**Learning:** It is tempting to remove bounds enforcement operations (like `% 360` for angles) from helper functions if the caller applies the same modulo operation later on. However, this breaks the semantic correctness of the helper function, making it return out-of-bounds or infinite values which causes regressions for other callers expecting bounded values.
+**Action:** Do not remove bounds enforcement or semantic constraints from a function's return value for microscopic micro-optimizations.
