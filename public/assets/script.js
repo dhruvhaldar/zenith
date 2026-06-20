@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(toastTimeout);
                 clearTimeout(announcerTimeout);
 
+                // Clear native text selection so success background is visible
+                window.getSelection().removeAllRanges();
+
                 // Visual feedback (inline)
                 el.classList.remove('copy-error');
                 el.classList.add('copy-success');

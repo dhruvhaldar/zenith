@@ -129,3 +129,6 @@
 ## 2026-05-28 - CSS Icons for Selectable Text
 **Learning:** When making text one-click copyable using `user-select: all`, you cannot add visual affordances (like copy icons) by inserting actual text or emojis into the DOM (e.g. `content: " 📋"` or appending `<span>📋</span>`), because the icon will be inadvertently selected and copied by the user's browser or `element.textContent` logic.
 **Action:** Always implement visual indicators for selectable elements using CSS pseudo-elements (like `::after`) and apply the icon using a `background-image` (e.g., an inline data SVG) instead of the `content` property. This perfectly separates the visual affordance from the selectable text node.
+## 2026-06-20 - Clearing Native Text Selection on Copy
+**Learning:** When implementing 'click-to-copy' functionality on text elements (especially those using `user-select: all`), the browser's default native text selection highlight (usually blue) will persist after the click. This native highlight can obscure custom visual success states (like a temporary background color change).
+**Action:** Always explicitly clear the native text selection immediately after the copy operation by calling `window.getSelection().removeAllRanges()` to ensure custom visual feedback is cleanly visible to the user.
