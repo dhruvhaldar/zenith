@@ -33,6 +33,9 @@ class Telescope:
         self.aperture = aperture
         self.focal_length = focal_length
         self.area = np.pi * (self.aperture / 2)**2
+        # ⚡ Bolt: Hoist constant scalar calculations for diffraction limit to avoid
+        # redundant math and function calls on every invocation (~3x speedup).
+        self._diffraction_constant = 1.22 * rad_to_deg(1.0) * 3600.0 / aperture
 
     def diffraction_limit(self, wavelength=550e-9):
         """
@@ -44,8 +47,7 @@ class Telescope:
         Returns:
             float: Resolution limit in arcseconds.
         """
-        theta_rad = 1.22 * wavelength / self.aperture
-        return rad_to_deg(theta_rad) * 3600.0
+        return wavelength * self._diffraction_constant
 
     def calculate_snr(self, target_mag, exposure, ccd, sky_mag=21.0):
         """

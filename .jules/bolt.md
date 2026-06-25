@@ -1,3 +1,6 @@
 ## 2025-02-27 - Mathematical Constant Inlining
 **Learning:** In highly mathematical Python applications (like cosmology calculators running complex integrals), formulas often re-calculate constant coefficients from fixed physical constants on every function invocation. While Python scalar math is generally fast, eliminating these redundant operations via pre-calculation avoids implicit variable allocations and floating-point divisions, leading to measurable execution time reductions (e.g., ~16-20% speedup in tight loops or repeated calls).
 **Action:** When auditing mathematical models or numerical integration fallbacks, analyze equations to factor out scalar constants (e.g., unit conversions combined with fixed fractional multipliers) and replace them with a single pre-calculated constant float value where safe.
+## 2025-02-27 - Hoisting Loop-Invariant Scalar Calculations
+**Learning:** In classes with methods called repeatedly (like optics or simulation samplers), calculating scalar constants involving multiple arithmetic operations and function calls (e.g., unit conversions) on every invocation introduces significant overhead.
+**Action:** Identify loop-invariant scalar calculations and hoist them into the `__init__` method. Pre-calculating these values prevents redundant arithmetic overhead on every method invocation, yielding measurable speedups.
