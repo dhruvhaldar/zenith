@@ -150,7 +150,7 @@ def add_security_headers(response):
     response.headers['Access-Control-Max-Age'] = '86400'
 
     # 🛡️ Sentinel: Enforce application/json to prevent implicit text/html MIME-sniffing/XSS on implicit OPTIONS
-    if request.method == 'OPTIONS' and response.mimetype == 'text/html':
+    if request.method == 'OPTIONS' and response.mimetype == 'text/html' and response.status_code != 204:
         response.mimetype = 'application/json'
 
     # Prevent clickjacking attacks
