@@ -153,6 +153,10 @@ def add_security_headers(response):
     if request.method == 'OPTIONS' and response.mimetype == 'text/html' and response.status_code != 204:
         response.mimetype = 'application/json'
 
+    # 🛡️ Sentinel: Remove Content-Type on 204 responses to avoid HTTP protocol violations
+    if response.status_code == 204 and "Content-Type" in response.headers:
+        del response.headers["Content-Type"]
+
     # Prevent clickjacking attacks
     response.headers['X-Frame-Options'] = 'DENY'
     # Prevent MIME-sniffing
