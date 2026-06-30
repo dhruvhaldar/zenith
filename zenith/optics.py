@@ -32,7 +32,10 @@ class Telescope:
         """
         self.aperture = aperture
         self.focal_length = focal_length
-        self.area = np.pi * (self.aperture / 2)**2
+        # ⚡ Bolt: Use explicit multiplication instead of **2 for simple squares to bypass
+        # the overhead of the generalized power evaluation function.
+        half_aperture = self.aperture / 2.0
+        self.area = np.pi * (half_aperture * half_aperture)
         # ⚡ Bolt: Hoist constant scalar calculations for diffraction limit to avoid
         # redundant math and function calls on every invocation (~3x speedup).
         self._diffraction_constant = 1.22 * rad_to_deg(1.0) * 3600.0 / aperture
