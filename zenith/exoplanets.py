@@ -2,6 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from zenith.utils import G, solar_mass, solar_radius, AU, earth_radius, jupiter_radius
 
+# ⚡ Bolt: Hoist constant scalar calculation for Kepler's 3rd Law to module level
+# to avoid redundant arithmetic overhead on every function invocation.
+_KEPLER_CONSTANT = G / (4.0 * np.pi**2)
+
 class TransitSimulator:
     """
     Simulate exoplanet transit light curves.
@@ -21,13 +25,18 @@ class TransitSimulator:
 
         # Calculate semi-major axis using Kepler's 3rd Law
         # a^3 = G * M * T^2 / (4 * pi^2)
-        self.a = (G * self.M_star * self.period**2 / (4 * np.pi**2))**(1.0/3.0)
+        # ⚡ Bolt: Use explicit multiplication instead of **2 for simple squares to bypass
+        # the overhead of the generalized power evaluation function.
+        # ⚡ Bolt: Hoist constant scalar calculation for Kepler's 3rd Law to module level.
+        self.a = (_KEPLER_CONSTANT * self.M_star * (self.period * self.period))**(1.0/3.0)
 
         # Orbital velocity (assuming circular)
         self.v_orb = 2 * np.pi * self.a / self.period
 
         # Transit depth
-        self.depth = (self.R_planet / self.R_star)**2
+        # ⚡ Bolt: Use explicit multiplication instead of **2
+        rp_rs = self.R_planet / self.R_star
+        self.depth = rp_rs * rp_rs
 
         # Duration (full transit chord, center to center)
         # T = 2 * R_star / v_orb (approx for edge-on)
