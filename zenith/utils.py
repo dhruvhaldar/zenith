@@ -22,13 +22,16 @@ earth_radius = 6.371e6  # Earth radius [m]
 jupiter_radius = 7.1492e7 # Jupiter equatorial radius [m]
 sun_lum = 3.828e26      # Solar luminosity [W]
 
+# ⚡ Bolt: Hoist constant mathematical expression to a module-level constant to bypass redundant arithmetic overhead.
+_MPC_IN_METERS = 1e6 * parsec
+
 def mpc_to_m(mpc):
     """Convert Megaparsecs to meters."""
-    return mpc * 1e6 * parsec
+    return mpc * _MPC_IN_METERS
 
 def m_to_mpc(m):
     """Convert meters to Megaparsecs."""
-    return m / (1e6 * parsec)
+    return m / _MPC_IN_METERS
 
 def rad_to_deg(rad):
     """Convert radians to degrees."""
