@@ -73,7 +73,10 @@ def lookback_time(z, H0=70.0, omega_m=0.3, omega_l=0.7):
         # Mathematically evaluating `coef * (t_age_0 - t_age_z)` saves a redundant floating-point
         # multiplication step on every execution, yielding a measured ~55% execution time reduction.
         t_age_0 = math.asinh(sqrt_lm)
-        t_age_z = math.asinh(sqrt_lm * ((1.0+z)**-1.5))
+        # ⚡ Bolt: Replace fractional power with explicit square root and division
+        # to bypass generalized math.pow overhead.
+        z1 = 1.0 + z
+        t_age_z = math.asinh(sqrt_lm / (z1 * math.sqrt(z1)))
         return coef * (t_age_0 - t_age_z)
 
     # Let's convert H0 to Gyr^-1

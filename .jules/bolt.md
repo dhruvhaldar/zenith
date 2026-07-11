@@ -7,3 +7,6 @@
 ## 2025-03-02 - Hoisting Constant Arithmetic Expressions to Module Level
 **Learning:** When attempting to optimize mathematical computations by pre-calculating constants (e.g., `4.0 * np.pi * sigma_sb`), replacing the expression with a hardcoded "magic" floating-point number (e.g., `7.12558509893708e-07`) destroys code readability and makes the codebase unmaintainable (especially for scientific values that might get updated in external libraries).
 **Action:** Instead of hardcoding the result, hoist the exact mathematical expression to a module-level constant (e.g., `_STEFAN_BOLTZMANN_CONSTANT = 4.0 * np.pi * sigma_sb`). This allows the Python interpreter to evaluate the expression once at import time, eliminating redundant arithmetic overhead on every function invocation while fully preserving readability and correctness.
+## 2026-03-05 - Avoid Generalized Power for Fractional Exponents
+**Learning:** Using the generalized power operator (e.g., `x**-1.5`) in performance-critical mathematical paths introduces significant computational overhead compared to explicitly evaluating the equivalent expression using `math.sqrt` and basic arithmetic (`1.0 / (x * math.sqrt(x))`).
+**Action:** Algebraically rewrite simple fractional powers to utilize explicit `math.sqrt` and arithmetic operations when executing loop-invariant or high-frequency scalar calculations.
