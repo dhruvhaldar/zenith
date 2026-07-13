@@ -205,6 +205,11 @@ def home():
         "endpoints": ["/api/snr", "/api/transit", "/api/hubble"]
     })
 
+# ⚡ Bolt: Cache expensive Telescope and CCD instantiation outside the request handler
+# to avoid recreating them on every API call.
+_DEFAULT_TELESCOPE = Telescope(aperture=0.203, focal_length=2.0)
+_DEFAULT_CCD = CCD()
+
 @app.route('/api/snr', methods=['GET'])
 def get_snr():
     try:
@@ -225,9 +230,7 @@ def get_snr():
         app.logger.warning(f"Input validation failed on {request.method} {request.path} from {client_ip}: {e}")
         return jsonify({"error": "Invalid input parameters"}), 400
 
-    scope = Telescope(aperture=0.203, focal_length=2.0)
-    camera = CCD()
-    snr = scope.calculate_snr(target_mag=mag, exposure=exposure, ccd=camera)
+    snr = _DEFAULT_TELESCOPE.calculate_snr(target_mag=mag, exposure=exposure, ccd=_DEFAULT_CCD)
 
     return jsonify({
         "telescope": "8-inch f/10",
