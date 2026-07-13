@@ -10,3 +10,6 @@
 ## 2026-03-05 - Avoid Generalized Power for Fractional Exponents
 **Learning:** Using the generalized power operator (e.g., `x**-1.5`) in performance-critical mathematical paths introduces significant computational overhead compared to explicitly evaluating the equivalent expression using `math.sqrt` and basic arithmetic (`1.0 / (x * math.sqrt(x))`).
 **Action:** Algebraically rewrite simple fractional powers to utilize explicit `math.sqrt` and arithmetic operations when executing loop-invariant or high-frequency scalar calculations.
+## 2026-03-05 - Hoist Object Instantiation Outside Request Handlers
+**Learning:** In Flask web APIs, instantiating complex classes (e.g., `Telescope` and `CCD` objects) inside the route handler causes them to be redundantly created from scratch on every single incoming API request. If these objects act as stateless configuration containers for methods, this introduces unnecessary memory allocation and CPU overhead.
+**Action:** To provide a measurable performance improvement, hoist the initialization of static or stateless service objects outside the request handler to the module level. This caches the instances globally, drastically reducing execution time for the endpoint.
