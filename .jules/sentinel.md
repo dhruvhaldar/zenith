@@ -159,3 +159,7 @@
 **Vulnerability:** The application was globally overriding the `mimetype` to `application/json` for all implicit `OPTIONS` requests to prevent MIME-sniffing XSS. However, it also applied this override to `204 No Content` responses. Modifying the `mimetype` or `Content-Type` on a `204` response implies the existence of a body, violating the HTTP protocol, and causing Flask/Werkzeug to behave anomalously, potentially breaking CORS preflights.
 **Learning:** Security mechanisms intended to force safe content types (like `application/json`) must be context-aware and respect HTTP status code semantics, particularly for body-less responses like `204 No Content` and `304 Not Modified`.
 **Prevention:** When enforcing strict `mimetype` or `Content-Type` headers in global request hooks (like `@app.after_request`), always explicitly check and exclude `204 No Content` responses (e.g., `if response.status_code != 204:`) and explicitly remove any erroneously added `Content-Type` headers to prevent HTTP protocol violations.
+## 2024-05-13 - Security Theater in OPTIONS Handling
+**Vulnerability:** Explicitly overriding default OPTIONS request handling to return a 204 No Content response without setting actual CORS headers in the same block.
+**Learning:** This is "security theater" because it suppresses default Werkzeug behaviors (like generating Allow headers) without providing actual security value.
+**Prevention:** Rely on Flask/Werkzeug's default OPTIONS handling, which properly generates Allow headers. Apply CORS headers globally via an after_request hook.
