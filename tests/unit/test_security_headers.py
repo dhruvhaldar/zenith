@@ -88,7 +88,7 @@ def test_request_payload_too_large(client):
 def test_cors_headers(client):
     """Test that CORS headers are applied to an API route."""
     response = client.options('/api/snr?mag=12&exposure=60')
-    assert response.status_code == 204
+    assert response.status_code == 200
     assert response.headers.get('Access-Control-Allow-Origin') == '*'
     assert response.headers.get('Access-Control-Allow-Methods') == 'GET, OPTIONS'
     assert response.headers.get('Access-Control-Allow-Headers') == 'Content-Type, Authorization'

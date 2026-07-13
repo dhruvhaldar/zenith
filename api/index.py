@@ -205,10 +205,8 @@ def home():
         "endpoints": ["/api/snr", "/api/transit", "/api/hubble"]
     })
 
-@app.route('/api/snr', methods=['GET', 'OPTIONS'])
+@app.route('/api/snr', methods=['GET'])
 def get_snr():
-    if request.method == 'OPTIONS':
-        return app.response_class(status=204)
     try:
         # 🛡️ Sentinel: Input validation with reasonable boundaries to prevent DoS via huge values
         mag = safe_get_float(request.args, 'mag', 12.0)
@@ -238,10 +236,8 @@ def get_snr():
         "snr": snr
     })
 
-@app.route('/api/transit', methods=['GET', 'OPTIONS'])
+@app.route('/api/transit', methods=['GET'])
 def get_transit():
-    if request.method == 'OPTIONS':
-        return app.response_class(status=204)
     try:
         # 🛡️ Sentinel: Input validation with limits
         period = safe_get_float(request.args, 'period', 4.0)
@@ -264,10 +260,8 @@ def get_transit():
         "transit_duration_hours": sim.duration / 3600.0
     })
 
-@app.route('/api/hubble', methods=['GET', 'OPTIONS'])
+@app.route('/api/hubble', methods=['GET'])
 def get_hubble():
-    if request.method == 'OPTIONS':
-        return app.response_class(status=204)
     try:
         # 🛡️ Sentinel: Input validation with limits
         d = safe_get_float(request.args, 'd', 10.0)
