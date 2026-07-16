@@ -132,7 +132,7 @@ def handle_exception(e):
         return jsonify({
             "error": e.name,
             "description": e.description
-        }), e.code
+        }), e.code, e.get_headers()
 
     # 🛡️ Sentinel: Securely log unhandled exceptions internally to avoid silent failures
     # while preventing stack trace exposure to the client. Include request context for security auditing.
