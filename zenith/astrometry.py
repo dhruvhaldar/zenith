@@ -66,8 +66,11 @@ def ra_dec_to_alt_az(ra, dec, lat, lon, time):
     sin_ha = math.sin(ha_rad)
     cos_ha = math.cos(ha_rad)
 
+    # ⚡ Bolt: Applied Common Subexpression Elimination to factor out `cos_ha * cos_dec`.
+    cos_ha_cos_dec = cos_ha * cos_dec
+
     # Altitude
-    sin_alt = sin_dec * sin_lat + cos_dec * cos_lat * cos_ha
+    sin_alt = sin_dec * sin_lat + cos_lat * cos_ha_cos_dec
     # Clamp sin_alt to [-1, 1] to avoid math domain errors due to floating point inaccuracies
     # ⚡ Bolt: Replace min/max with conditionals to avoid function call overhead (~40% faster clamping)
     if sin_alt > 1.0:
@@ -93,7 +96,7 @@ def ra_dec_to_alt_az(ra, dec, lat, lon, time):
     # ⚡ Bolt: Eliminate slow division by multiplying both terms by cos_dec
     # Since dec is between -90 and 90, cos_dec >= 0, meaning signs of Y/X are preserved for atan2
     Y = -sin_ha * cos_dec
-    X = sin_dec * cos_lat - sin_lat * cos_ha * cos_dec
+    X = sin_dec * cos_lat - sin_lat * cos_ha_cos_dec
 
     az_rad = math.atan2(Y, X)
 
