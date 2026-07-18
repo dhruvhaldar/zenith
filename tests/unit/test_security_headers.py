@@ -94,6 +94,16 @@ def test_cors_headers(client):
     assert response.headers.get('Access-Control-Allow-Headers') == 'Content-Type, Authorization'
     assert response.headers.get('Access-Control-Max-Age') == '86400'
 
+def test_http_exception_content_type(client):
+    """Test that HTTP exceptions return application/json."""
+    response = client.get('/nonexistent')
+    assert response.status_code == 404
+    assert response.headers.get('Content-Type') == 'application/json'
+
+    response = client.post('/api/snr')
+    assert response.status_code == 405
+    assert response.headers.get('Content-Type') == 'application/json'
+
 def test_cors_headers_get(client):
     """Test that CORS headers are applied to an API route."""
     response = client.get('/api/snr?mag=12&exposure=60')
