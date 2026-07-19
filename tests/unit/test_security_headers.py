@@ -94,6 +94,23 @@ def test_cors_headers(client):
     assert response.headers.get('Access-Control-Allow-Headers') == 'Content-Type, Authorization'
     assert response.headers.get('Access-Control-Max-Age') == '86400'
 
+def test_304_no_content_type():
+    """Test that 304 responses do not have a Content-Type header."""
+    from flask import Flask, Response
+    from api.index import add_security_headers
+
+    test_app = Flask(__name__)
+    test_app.after_request(add_security_headers)
+
+    @test_app.route('/_test_304')
+    def test_304():
+        return Response(status=304)
+
+    with test_app.test_client() as test_client:
+        response = test_client.get('/_test_304')
+        assert response.status_code == 304
+        assert 'Content-Type' not in response.headers
+
 def test_http_exception_content_type(client):
     """Test that HTTP exceptions return application/json."""
     response = client.get('/nonexistent')

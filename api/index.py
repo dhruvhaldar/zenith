@@ -153,11 +153,11 @@ def add_security_headers(response):
     response.headers['Access-Control-Max-Age'] = '86400'
 
     # 🛡️ Sentinel: Enforce application/json to prevent implicit text/html MIME-sniffing/XSS on implicit OPTIONS
-    if request.method == 'OPTIONS' and response.mimetype == 'text/html' and response.status_code != 204:
+    if request.method == 'OPTIONS' and response.mimetype == 'text/html' and response.status_code not in (204, 304):
         response.mimetype = 'application/json'
 
-    # 🛡️ Sentinel: Remove Content-Type on 204 responses to avoid HTTP protocol violations
-    if response.status_code == 204 and "Content-Type" in response.headers:
+    # 🛡️ Sentinel: Remove Content-Type on 204 and 304 responses to avoid HTTP protocol violations
+    if response.status_code in (204, 304) and "Content-Type" in response.headers:
         del response.headers["Content-Type"]
 
     # Prevent clickjacking attacks
