@@ -49,10 +49,11 @@ def planck_law(wavelength, temperature):
             w2 = wavelength * wavelength
             res *= (w2 * w2 * wavelength)
         else:
-            res *= wavelength
-            res *= wavelength
-            res *= wavelength
-            res *= wavelength
+            # ⚡ Bolt: Pre-calculate the square of the wavelength to eliminate redundant
+            # array iterations during multiplication.
+            w2 = wavelength * wavelength
+            res *= w2
+            res *= w2
             res *= wavelength
 
         np.divide(a, res, out=res)
