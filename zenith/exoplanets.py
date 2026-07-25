@@ -59,7 +59,12 @@ class TransitSimulator:
             tuple: (time_hours, normalized_flux)
         """
         t_half_hours = duration_hours / 2.0
-        time_hours = np.linspace(-t_half_hours, t_half_hours, points)
+        # ⚡ Bolt: Fast linspace equivalent using np.arange bypasses np.linspace's
+        # generic overhead (type checking/dispatch).
+        step = duration_hours / (points - 1) if points > 1 else 0.0
+        time_hours = np.arange(points, dtype=float)
+        time_hours *= step
+        time_hours -= t_half_hours
 
         # Impact parameter b=0 (edge-on)
         # Distance from star center as function of time
@@ -74,7 +79,8 @@ class TransitSimulator:
         flux = np.abs(time_hours)
         flux *= -self._c2
         flux += self._c1
-        np.clip(flux, 0.0, 1.0, out=flux)
+        # ⚡ Bolt: Use ndarray.clip() instead of np.clip() to avoid dispatcher overhead
+        flux.clip(0.0, 1.0, out=flux)
         flux *= -self.depth
         flux += 1.0
 
