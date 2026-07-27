@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, g
 import os
 import sys
 
@@ -54,13 +54,24 @@ def enforce_rate_limit():
             except KeyError:
                 break
 
+        reset_time = int(reqs[0] + RATE_WINDOW) if reqs else int(now + RATE_WINDOW)
+
         if len(reqs) >= RATE_LIMIT:
             rate_cache[client_ip] = reqs
             app.logger.warning(f"Rate limit exceeded by {client_ip} on {request.method} {request.path}")
-            return jsonify({"error": "Too Many Requests"}), 429, {'Retry-After': str(RATE_WINDOW)}
+            return jsonify({"error": "Too Many Requests"}), 429, {
+                'Retry-After': str(RATE_WINDOW),
+                'X-RateLimit-Limit': str(RATE_LIMIT),
+                'X-RateLimit-Remaining': '0',
+                'X-RateLimit-Reset': str(reset_time)
+            }
 
         reqs.append(now)
         rate_cache[client_ip] = reqs
+
+        g.rate_limit_limit = RATE_LIMIT
+        g.rate_limit_remaining = RATE_LIMIT - len(reqs)
+        g.rate_limit_reset = reset_time
 # 🛡️ Sentinel: Properly parse reverse proxy headers (Vercel) to log accurate remote client IPs
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
@@ -179,6 +190,13 @@ def add_security_headers(response):
     response.headers['Cross-Origin-Resource-Policy'] = 'same-origin'
     # 🛡️ Sentinel: Obfuscate Server header to prevent information leakage
     response.headers['Server'] = 'Zenith API'
+
+    # 🛡️ Sentinel: Add Rate Limit headers for client transparency
+    if hasattr(g, 'rate_limit_limit'):
+        response.headers['X-RateLimit-Limit'] = str(g.rate_limit_limit)
+        response.headers['X-RateLimit-Remaining'] = str(g.rate_limit_remaining)
+        response.headers['X-RateLimit-Reset'] = str(g.rate_limit_reset)
+
     return response
 
 import math
