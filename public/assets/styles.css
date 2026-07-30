@@ -46,7 +46,7 @@
         }
         @media (prefers-reduced-motion: no-preference) {
             html { scroll-behavior: smooth; }
-            :target:not(body) {
+            :target:not(body):not(main) {
                 animation: target-highlight 2s ease-out;
                 border-radius: 4px;
             }
@@ -93,6 +93,7 @@
             font-size: 0.9em;
             opacity: 0;
             transition: opacity 0.3s, bottom 0.3s, visibility 0.3s;
+            pointer-events: none;
         }
 
         .toast.show {
