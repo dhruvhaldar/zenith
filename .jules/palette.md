@@ -132,3 +132,7 @@
 ## 2026-06-20 - Clearing Native Text Selection on Copy
 **Learning:** When implementing 'click-to-copy' functionality on text elements (especially those using `user-select: all`), the browser's default native text selection highlight (usually blue) will persist after the click. This native highlight can obscure custom visual success states (like a temporary background color change).
 **Action:** Always explicitly clear the native text selection immediately after the copy operation by calling `window.getSelection().removeAllRanges()` to ensure custom visual feedback is cleanly visible to the user.
+
+## 2026-06-25 - Fragment Animation Refinement and Non-Blocking Toasts
+**Learning:** The `:target` CSS selector highlights the element linked by a URL fragment. If this fragment points to a large layout wrapper (like `<main id="main-content">` via a "Skip to main content" link), the entire page content flashes, which is jarring and distracting. Additionally, large, centrally positioned toast notifications can unintentionally intercept mouse clicks, blocking interactions with the content beneath them while they are visible.
+**Action:** Always exclude large structural landmarks from `:target` highlight animations using pseudo-classes like `:not(main)`. Also, apply `pointer-events: none` to transient, informational toast notifications to ensure they remain purely visual and do not disrupt the user's flow.
