@@ -171,6 +171,9 @@ def add_security_headers(response):
     # 🛡️ Sentinel: Enforce application/json to prevent implicit text/html MIME-sniffing/XSS on implicit OPTIONS
     if request.method == 'OPTIONS' and response.mimetype == 'text/html' and response.status_code not in (204, 304):
         response.mimetype = 'application/json'
+        # 🛡️ Sentinel: Ensure empty body is safely formatted as empty JSON object to maintain uniform guarantees
+        if response.data == b'':
+            response.data = b'{}'
 
     # 🛡️ Sentinel: Remove Content-Type on 204 and 304 responses to avoid HTTP protocol violations
     if response.status_code in (204, 304) and "Content-Type" in response.headers:
