@@ -136,3 +136,6 @@
 ## 2026-06-25 - Fragment Animation Refinement and Non-Blocking Toasts
 **Learning:** The `:target` CSS selector highlights the element linked by a URL fragment. If this fragment points to a large layout wrapper (like `<main id="main-content">` via a "Skip to main content" link), the entire page content flashes, which is jarring and distracting. Additionally, large, centrally positioned toast notifications can unintentionally intercept mouse clicks, blocking interactions with the content beneath them while they are visible.
 **Action:** Always exclude large structural landmarks from `:target` highlight animations using pseudo-classes like `:not(main)`. Also, apply `pointer-events: none` to transient, informational toast notifications to ensure they remain purely visual and do not disrupt the user's flow.
+## 2024-05-24 - Remove confusing focus outline on hover
+**Learning:** Applying a focus ring (`outline`) to both `:hover` and `:focus-visible` states creates a confusing UX for mouse users, as focus rings should specifically indicate keyboard navigation focus.
+**Action:** Always separate `:hover` (e.g. background change) and `:focus-visible` (e.g. outline) styles for custom interactive elements like copyable text blocks.
