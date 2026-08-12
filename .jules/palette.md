@@ -139,3 +139,7 @@
 ## 2024-05-24 - Remove confusing focus outline on hover
 **Learning:** Applying a focus ring (`outline`) to both `:hover` and `:focus-visible` states creates a confusing UX for mouse users, as focus rings should specifically indicate keyboard navigation focus.
 **Action:** Always separate `:hover` (e.g. background change) and `:focus-visible` (e.g. outline) styles for custom interactive elements like copyable text blocks.
+
+## 2026-08-12 - Synchronous Tactile Feedback for Async Actions
+**Learning:** While toast notifications and classes like `.copy-success` provide good feedback for successful async operations (like clipboard copying), they have a slight delay. Users miss the immediate tactile "click" sensation.
+**Action:** Always pair async visual feedback mechanisms with a synchronous CSS `:active` state (like a slight scale down or background darken) to provide immediate, tactile reassurance the moment the mouse button is pressed.
