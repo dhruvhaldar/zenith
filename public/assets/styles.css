@@ -8,6 +8,7 @@
         a { color: #0056b3; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; transition: color 0.2s ease, text-decoration-thickness 0.2s ease; }
         a:hover { text-decoration-thickness: 2px; color: #003d82; }
         a:focus-visible { outline: 3px solid #0056b3; outline-offset: 3px; border-radius: 2px; text-decoration-thickness: 2px; }
+        a:active { color: #00224f; text-decoration-thickness: 2px; }
         abbr[title] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; }
         abbr[title]:focus-visible { outline: 3px solid #0056b3; outline-offset: 3px; border-radius: 2px; }
         a abbr[title] { cursor: inherit; }
@@ -38,6 +39,10 @@
         }
         .copyable-text:hover, .copyable-text:focus-visible {
             background-color: #e0e0e0;
+        }
+        .copyable-text:active {
+            background-color: #d0d0d0;
+            transform: scale(0.98);
         }
         .copyable-text:focus-visible {
             outline: 2px solid #0056b3;
