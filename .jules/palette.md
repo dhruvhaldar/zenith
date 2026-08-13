@@ -143,3 +143,6 @@
 ## 2026-08-12 - Synchronous Tactile Feedback for Async Actions
 **Learning:** While toast notifications and classes like `.copy-success` provide good feedback for successful async operations (like clipboard copying), they have a slight delay. Users miss the immediate tactile "click" sensation.
 **Action:** Always pair async visual feedback mechanisms with a synchronous CSS `:active` state (like a slight scale down or background darken) to provide immediate, tactile reassurance the moment the mouse button is pressed.
+## 2024-10-24 - Separate hover and focus-visible states
+**Learning:** To improve accessibility and prevent confusing mouse users, separate `:hover` and `:focus-visible` CSS states on interactive elements. Reserve focus rings (`outline`) strictly for `:focus-visible` (keyboard navigation) and use alternative visual cues like background color changes for `:hover`.
+**Action:** Ensure `:hover` and `:focus-visible` styles do not share non-focus-specific visual indicators like `background-color`.
