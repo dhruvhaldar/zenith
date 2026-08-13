@@ -13,6 +13,7 @@ import time
 import bisect
 from collections import OrderedDict
 from threading import Lock
+from functools import lru_cache
 
 app = Flask(__name__)
 
@@ -239,6 +240,12 @@ def home():
 _DEFAULT_TELESCOPE = Telescope(aperture=0.203, focal_length=2.0)
 _DEFAULT_CCD = CCD()
 
+# ⚡ Bolt: Cache TransitSimulator instances to prevent redundant object creation overhead
+# on every request to the /api/transit endpoint.
+@lru_cache(maxsize=128)
+def _get_transit_simulator(period):
+    return TransitSimulator(period_days=period)
+
 @app.route('/api/snr', methods=['GET'])
 def get_snr():
     try:
@@ -284,7 +291,7 @@ def get_transit():
         app.logger.warning(f"Input validation failed on {request.method} {request.path} from {client_ip}: {e}")
         return jsonify({"error": "Invalid input parameters"}), 400
 
-    sim = TransitSimulator(period_days=period)
+    sim = _get_transit_simulator(period)
 
     return jsonify({
         "period_days": period,
