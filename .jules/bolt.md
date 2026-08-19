@@ -34,3 +34,9 @@
 ## 2026-08-13 - Parameterized Object Instantiation Caching in Request Handlers
 **Learning:** While static service objects (like `Telescope` or `CCD`) can be hoisted directly to the module level to avoid redundant instantiation overhead per API request, objects whose configuration depends on request parameters (like `TransitSimulator(period_days=...)`) cannot. However, repeatedly instantiating these complex objects inside the route handler still incurs unnecessary CPU and memory allocation overhead.
 **Action:** For complex objects parameterized by request inputs that are stateless after initialization, wrap their instantiation in an `@lru_cache(maxsize=128)` helper function at the module level. This caches the object instances across requests based on the input parameters, providing a measurable reduction in route execution time without compromising correctness.
+## 2026-10-27 - Fast Scalar Logarithm with math.log
+**Learning:** When calculating logarithms for single scalar values, `math.log` is approximately 20x faster than `np.log`. NumPy's `np.log` introduces significant generic function dispatching and type-checking overhead that dominates the execution time for scalar inputs.
+**Action:** Always prefer `math.log` over `np.log` when evaluating the logarithm of individual scalar values, even when operating within array processing logic branches.
+## 2026-10-27 - Safe Fast-Path for math.log
+**Learning:** Replacing `np.log` with `math.log` for scalar inputs blindly introduces a loss of `NaN` propagation for non-positive inputs. `np.log` handles zero/negative values by returning `inf`/`nan` (preserving numpy array error propagation rules), whereas `math.log` raises a `ValueError` which can break data pipelines.
+**Action:** When replacing `np.log` with `math.log` to bypass dispatch overhead for scalars, always gate it behind a `> 0` check. Fallback to `np.log` for zero or negative values to maintain correct mathematical error behavior.
