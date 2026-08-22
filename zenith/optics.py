@@ -100,7 +100,8 @@ class Telescope:
 
         # ⚡ Bolt: Combined all scalar constants (including n_pixels) before array multiplication
         # to eliminate redundant intermediate array iterations and temporary arrays.
-        C_sky_total = ZERO_MAG_FLUX * self.area * exposure * ccd.qe * pixel_area_arcsec * n_pixels
+        # ⚡ Bolt: Reused C_target subexpression to avoid redundant multiplication of ZERO_MAG_FLUX * self.area * exposure * ccd.qe
+        C_sky_total = C_target * pixel_area_arcsec * n_pixels
 
         # Photons from sky for all pixels in aperture
         # ⚡ Bolt: Eliminate temporary array creation overhead during array exponentiation
@@ -111,16 +112,10 @@ class Telescope:
         else:
             total_sky_photons = C_sky_total * math.exp(-0.9210340371976183 * sky_mag)
 
-        # c. Dark Current
-        dark_electrons = ccd.dark_current * exposure * n_pixels
-
-        # d. Read Noise
-        # ⚡ Bolt: Use explicit multiplication
-        read_noise_electrons = (ccd.read_noise * ccd.read_noise) * n_pixels
-
         # Total Noise
         # ⚡ Bolt: Combine scalar constant noise terms before array addition to avoid redundant array iterations
-        constant_noise = total_sky_photons + (dark_electrons + read_noise_electrons)
+        # ⚡ Bolt: Grouped dark current and read noise terms to eliminate redundant multiplications by n_pixels
+        constant_noise = total_sky_photons + (ccd.dark_current * exposure + ccd.read_noise * ccd.read_noise) * n_pixels
 
         # Allocate noise array, then use in-place operations below to eliminate further intermediate allocations
         noise = photons_target + constant_noise
