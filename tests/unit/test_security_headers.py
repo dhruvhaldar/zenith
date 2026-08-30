@@ -93,6 +93,7 @@ def test_cors_headers(client):
     assert response.headers.get('Access-Control-Allow-Methods') == 'GET, OPTIONS'
     assert response.headers.get('Access-Control-Allow-Headers') == 'Content-Type, Authorization'
     assert response.headers.get('Access-Control-Max-Age') == '86400'
+    assert response.headers.get('Access-Control-Expose-Headers') == 'X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After'
 
 def test_304_no_content_type():
     """Test that 304 responses do not have a Content-Type header."""
@@ -129,3 +130,4 @@ def test_cors_headers_get(client):
     assert response.headers.get('Access-Control-Allow-Methods') == 'GET, OPTIONS'
     assert response.headers.get('Access-Control-Allow-Headers') == 'Content-Type, Authorization'
     assert response.headers.get('Access-Control-Max-Age') == '86400'
+    assert response.headers.get('Access-Control-Expose-Headers') == 'X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After'

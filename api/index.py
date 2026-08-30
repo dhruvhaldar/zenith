@@ -168,6 +168,8 @@ def add_security_headers(response):
     response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     response.headers['Access-Control-Max-Age'] = '86400'
+    # 🛡️ Sentinel: Expose Rate Limit headers to allow cross-origin clients to proactively throttle
+    response.headers['Access-Control-Expose-Headers'] = 'X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After'
 
     # 🛡️ Sentinel: Enforce application/json to prevent implicit text/html MIME-sniffing/XSS on implicit OPTIONS
     if request.method == 'OPTIONS' and response.mimetype == 'text/html' and response.status_code not in (204, 304):
