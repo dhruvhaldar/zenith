@@ -184,14 +184,23 @@ def luminosity_from_radius_temp(radius, temperature):
             res = (radius * radius) * constant
         elif not isinstance(radius, np.ndarray):
             constant *= (radius * radius)
-            t2 = temperature * temperature
-            res = (t2 * t2) * constant
+            # ⚡ Bolt: Eliminate intermediate array allocations for T^4
+            # Copy as float to prevent UFuncTypeError and avoid modifying original array in-place
+            res = temperature.astype(float, copy=True)
+            res *= res
+            res *= res
+            res *= constant
         else:
-            t2 = temperature * temperature
-            res = (t2 * t2) * constant
+            # ⚡ Bolt: Eliminate intermediate array allocations for T^4
+            # Copy as float to prevent UFuncTypeError and avoid modifying original array in-place
+            res = temperature.astype(float, copy=True)
+            res *= res
+            res *= res
+            res *= constant
             # ⚡ Bolt: Avoid in-place operations when mixing arrays of different shapes
             # to prevent UFuncOutputCastingError during NumPy broadcasting.
-            res = res * (radius * radius)
+            r2 = radius * radius
+            res = res * r2
         return res
     else:
         r2 = radius * radius
