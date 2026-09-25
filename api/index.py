@@ -46,24 +46,30 @@ def enforce_rate_limit():
     now = time.time()
 
     with rate_limit_lock:
-        # Safely get and remove to avoid KeyError in multi-threaded environments
-        reqs = rate_cache.pop(client_ip, [])
+        # ⚡ Bolt: Optimize caching by retrieving in-place instead of O(N) dict popping
+        reqs = rate_cache.get(client_ip)
+        if reqs is None:
+            reqs = []
+            while len(rate_cache) >= MAX_CACHE_SIZE:
+                try:
+                    rate_cache.popitem(last=False)
+                except KeyError:
+                    break
+            rate_cache[client_ip] = reqs
+        else:
+            rate_cache.move_to_end(client_ip)
 
         # ⚡ Bolt: Replace O(N) list comprehension with O(log N) bisect search for fast pruning
         # of expired timestamps in rate limit window (~20x faster)
         idx = bisect.bisect_right(reqs, now - RATE_WINDOW)
-        reqs = reqs[idx:]
 
-        while len(rate_cache) >= MAX_CACHE_SIZE:
-            try:
-                rate_cache.popitem(last=False)
-            except KeyError:
-                break
+        # ⚡ Bolt: In-place deletion is faster than creating a sliced copy
+        if idx > 0:
+            del reqs[:idx]
 
         reset_time = int(reqs[0] + RATE_WINDOW) if reqs else int(now + RATE_WINDOW)
 
         if len(reqs) >= RATE_LIMIT:
-            rate_cache[client_ip] = reqs
             app.logger.warning(f"Rate limit exceeded by {client_ip} on {request.method} {request.path}")
             return jsonify({"error": "Too Many Requests"}), 429, {
                 'Retry-After': str(RATE_WINDOW),
@@ -73,7 +79,6 @@ def enforce_rate_limit():
             }
 
         reqs.append(now)
-        rate_cache[client_ip] = reqs
 
         g.rate_limit_limit = RATE_LIMIT
         g.rate_limit_remaining = RATE_LIMIT - len(reqs)
