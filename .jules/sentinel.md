@@ -192,3 +192,8 @@
 **Vulnerability:** The application used `ProxyFix(x_prefix=1)` but the upstream reverse proxy (Vercel) does not explicitly set or sanitize the `X-Forwarded-Prefix` header. This allows an attacker to send a malicious `X-Forwarded-Prefix` header, which Werkzeug will blindly trust, potentially altering `request.script_root` and `request.path`, leading to routing confusion or cache poisoning.
 **Learning:** Only configure `ProxyFix` to trust proxy headers that are explicitly set and guaranteed by the upstream reverse proxy infrastructure.
 **Prevention:** Disable parsing for unsupported proxy headers (e.g., setting `x_prefix=0`) to prevent header spoofing attacks.
+
+## 2026-09-26 - [Missing X-Permitted-Cross-Domain-Policies Header]
+**Vulnerability:** The application was missing the `X-Permitted-Cross-Domain-Policies` security header. While modern browsers have largely deprecated Flash and similar plugins, legacy clients or enterprise environments might still use them. Without this header, a malicious cross-domain policy file (`crossdomain.xml` or `clientaccesspolicy.xml`) could potentially be loaded or spoofed, allowing unauthorized cross-domain data access.
+**Learning:** Defense-in-depth requires protecting against legacy attack vectors, even if the primary threat landscape has evolved.
+**Prevention:** Always include `X-Permitted-Cross-Domain-Policies: none` in the global security headers to explicitly deny cross-domain requests from legacy rich internet applications.
