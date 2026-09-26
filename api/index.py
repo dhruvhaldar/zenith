@@ -203,6 +203,8 @@ def add_security_headers(response):
     # Prevent cross-origin information leaks
     response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
     response.headers['Cross-Origin-Resource-Policy'] = 'same-origin'
+    # 🛡️ Sentinel: Restrict cross-domain data leakage via legacy clients
+    response.headers['X-Permitted-Cross-Domain-Policies'] = 'none'
     # 🛡️ Sentinel: Obfuscate Server header to prevent information leakage
     response.headers['Server'] = 'Zenith API'
 
