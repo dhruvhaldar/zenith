@@ -47,3 +47,6 @@
 ## 2026-09-25 - Optimize Rate Limit Cache Logic
 **Learning:** List slicing (`reqs = reqs[idx:]`) on large arrays in high-throughput endpoints causes significant memory allocation and garbage collection overhead. Furthermore, `.pop()`ing and re-inserting elements in an `OrderedDict` creates unnecessary dictionary restructuring overhead compared to just using `.get()` and `.move_to_end()`.
 **Action:** When managing sliding time windows or LRU caches, use in-place mutations (like `del list[:idx]`) and `.move_to_end()` to preserve memory and execute O(1) operations, rather than recreating objects or relying on dictionary deletions.
+## 2026-11-23 - Replace Division with Multiplication
+**Learning:** In interpreted languages and with numerical libraries like NumPy, division operations are consistently slower than multiplication. While compilers for some statically typed languages may automatically optimize this, explicitly writing the division as a multiplication by a pre-calculated inverse yields measurable execution speedups for both scalars and large arrays.
+**Action:** When performing high-frequency divisions by a constant (e.g., `v / _C_KM_S`), pre-calculate the inverse at the module level (`_INV_C_KM_S = 1.0 / _C_KM_S`) and replace the operation with explicit multiplication (`v * _INV_C_KM_S`).
