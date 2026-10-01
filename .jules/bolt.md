@@ -50,3 +50,9 @@
 ## 2026-11-23 - Replace Division with Multiplication
 **Learning:** In interpreted languages and with numerical libraries like NumPy, division operations are consistently slower than multiplication. While compilers for some statically typed languages may automatically optimize this, explicitly writing the division as a multiplication by a pre-calculated inverse yields measurable execution speedups for both scalars and large arrays.
 **Action:** When performing high-frequency divisions by a constant (e.g., `v / _C_KM_S`), pre-calculate the inverse at the module level (`_INV_C_KM_S = 1.0 / _C_KM_S`) and replace the operation with explicit multiplication (`v * _INV_C_KM_S`).
+## 2026-11-24 - Avoid Premature Micro-optimizations of NumPy Arrays in Uncritical Paths
+**Learning:** Optimizing numpy array creations like `np.linspace` with manual `np.arange` logic or chaining operations inside non-critical paths (e.g., small arrays for plotting) adds visual noise and reduces readability for negligible performance gains (microseconds).
+**Action:** Focus array micro-optimizations on inner loops and large arrays where memory allocations and iterations have a measurable impact. Avoid optimizing things that don't scale with size (like fixed 50-element plotting arrays).
+## 2026-11-25 - Avoid Intermediate Array Allocation in Scalar/Array Groupings
+**Learning:** In calculations where multiple scalars are added or subtracted from an array (e.g. `res = (m - M) + 5.0`), this can create multiple intermediate arrays (one for the array minus scalar, then another when adding the next scalar). Replacing this with grouped in-place modifications (e.g., `res = m - M; res += 5.0`) avoids one intermediate allocation, yielding a small but measurable speedup for large arrays.
+**Action:** When performing sequences of scalar additions/subtractions on NumPy arrays, apply the initial operation to create the new array, then apply subsequent operations in-place (`+=`, `-=`).
