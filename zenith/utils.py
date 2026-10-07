@@ -25,6 +25,10 @@ sun_lum = 3.828e26      # Solar luminosity [W]
 # ⚡ Bolt: Hoist constant mathematical expression to a module-level constant to bypass redundant arithmetic overhead.
 _MPC_IN_METERS = 1e6 * parsec
 
+# ⚡ Bolt: Pre-calculate the inverse to replace expensive division operations
+# with faster multiplication when converting meters to Megaparsecs.
+_INV_MPC_IN_METERS = 1.0 / _MPC_IN_METERS
+
 # ⚡ Bolt: Hoist constant calculation for radians/degrees conversions to eliminate
 # math.radians and math.degrees function call overhead (~3.8x faster for scalars).
 _DEG_TO_RAD = math.pi / 180.0
@@ -36,7 +40,9 @@ def mpc_to_m(mpc):
 
 def m_to_mpc(m):
     """Convert meters to Megaparsecs."""
-    return m / _MPC_IN_METERS
+    # ⚡ Bolt: Use explicit multiplication by the pre-calculated inverse constant
+    # instead of division to bypass costly division overhead for arrays and scalars.
+    return m * _INV_MPC_IN_METERS
 
 def rad_to_deg(rad):
     """Convert radians to degrees."""
