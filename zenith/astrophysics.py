@@ -100,7 +100,10 @@ def distance_modulus(m, M):
         elif not isinstance(m, np.ndarray):
             res = (m + 5.0) - M
         else:
-            res = (m - M) + 5.0
+            # ⚡ Bolt: Apply initial subtraction to create a new array, then use
+            # in-place addition to eliminate a redundant intermediate array allocation.
+            res = m - M
+            res += 5.0
         res *= 0.4605170185988092
         np.exp(res, out=res)
         return res
