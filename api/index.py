@@ -84,7 +84,8 @@ def enforce_rate_limit():
         g.rate_limit_remaining = RATE_LIMIT - len(reqs)
         g.rate_limit_reset = reset_time
 # 🛡️ Sentinel: Properly parse reverse proxy headers (Vercel) to log accurate remote client IPs
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=0)
+# Disable x_host parsing (x_host=0) to prevent X-Forwarded-Host spoofing, as Vercel does not guarantee it.
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=0, x_prefix=0)
 
 # 🛡️ Sentinel: Enforce a strict maximum request size (10 KB) to prevent DoS via massive payloads
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024

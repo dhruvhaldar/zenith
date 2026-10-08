@@ -197,3 +197,8 @@
 **Vulnerability:** The application was missing the `X-Permitted-Cross-Domain-Policies` security header. While modern browsers have largely deprecated Flash and similar plugins, legacy clients or enterprise environments might still use them. Without this header, a malicious cross-domain policy file (`crossdomain.xml` or `clientaccesspolicy.xml`) could potentially be loaded or spoofed, allowing unauthorized cross-domain data access.
 **Learning:** Defense-in-depth requires protecting against legacy attack vectors, even if the primary threat landscape has evolved.
 **Prevention:** Always include `X-Permitted-Cross-Domain-Policies: none` in the global security headers to explicitly deny cross-domain requests from legacy rich internet applications.
+
+## 2026-09-27 - [Host Header Spoofing via Untrusted X-Forwarded-Host]
+**Vulnerability:** The application used `ProxyFix(x_host=1)` but the upstream reverse proxy (Vercel) does not explicitly sanitize or guarantee the `X-Forwarded-Host` header. This allows an attacker to send a malicious `X-Forwarded-Host` header, which Werkzeug will blindly trust, potentially leading to Host Header Spoofing, cache poisoning, or generating malicious password reset links if `url_for(_external=True)` is used.
+**Learning:** Only configure `ProxyFix` to trust proxy headers that are explicitly set and guaranteed by the upstream reverse proxy infrastructure. Vercel forwards `X-Forwarded-Host` directly from the client if provided.
+**Prevention:** Disable parsing for unsupported or unsanitized proxy headers (e.g., setting `x_host=0`) to prevent host header spoofing attacks.
