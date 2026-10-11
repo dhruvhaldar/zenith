@@ -10,8 +10,7 @@ from zenith.exoplanets import TransitSimulator
 from zenith.cosmology import recession_velocity
 from werkzeug.middleware.proxy_fix import ProxyFix
 import time
-import bisect
-from collections import OrderedDict
+from collections import OrderedDict, deque
 from threading import Lock
 from functools import lru_cache
 
@@ -49,7 +48,7 @@ def enforce_rate_limit():
         # ⚡ Bolt: Optimize caching by retrieving in-place instead of O(N) dict popping
         reqs = rate_cache.get(client_ip)
         if reqs is None:
-            reqs = []
+            reqs = deque()
             while len(rate_cache) >= MAX_CACHE_SIZE:
                 try:
                     rate_cache.popitem(last=False)
@@ -59,13 +58,11 @@ def enforce_rate_limit():
         else:
             rate_cache.move_to_end(client_ip)
 
-        # ⚡ Bolt: Replace O(N) list comprehension with O(log N) bisect search for fast pruning
-        # of expired timestamps in rate limit window (~20x faster)
-        idx = bisect.bisect_right(reqs, now - RATE_WINDOW)
-
-        # ⚡ Bolt: In-place deletion is faster than creating a sliced copy
-        if idx > 0:
-            del reqs[:idx]
+        # ⚡ Bolt: Replace O(log N) bisect search and O(N) list slicing with O(1) amortized
+        # popleft() on a deque to prune expired timestamps in the rate limit window
+        window_start = now - RATE_WINDOW
+        while reqs and reqs[0] < window_start:
+            reqs.popleft()
 
         reset_time = int(reqs[0] + RATE_WINDOW) if reqs else int(now + RATE_WINDOW)
 
