@@ -202,3 +202,8 @@
 **Vulnerability:** The application used `ProxyFix(x_host=1)` but the upstream reverse proxy (Vercel) does not explicitly sanitize or guarantee the `X-Forwarded-Host` header. This allows an attacker to send a malicious `X-Forwarded-Host` header, which Werkzeug will blindly trust, potentially leading to Host Header Spoofing, cache poisoning, or generating malicious password reset links if `url_for(_external=True)` is used.
 **Learning:** Only configure `ProxyFix` to trust proxy headers that are explicitly set and guaranteed by the upstream reverse proxy infrastructure. Vercel forwards `X-Forwarded-Host` directly from the client if provided.
 **Prevention:** Disable parsing for unsupported or unsanitized proxy headers (e.g., setting `x_host=0`) to prevent host header spoofing attacks.
+
+## 2025-02-28 - [Prevent HTTP Parameter Pollution in Flask request.args]
+**Vulnerability:** HTTP Parameter Pollution (HPP) in `request.args.get(key)`.
+**Learning:** `request.args.get(key)` silently discards multiple values for the same key, which can cause bypassing of upstream WAFs or WAFs parsing the query string differently.
+**Prevention:** Use `request.args.getlist(key)` and explicitly reject requests with multiple values if they are not expected.
