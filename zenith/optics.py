@@ -32,6 +32,7 @@ class Telescope:
         """
         self.aperture = aperture
         self.focal_length = focal_length
+        self._inv_focal_length = 1.0 / focal_length
         # ⚡ Bolt: Use explicit multiplication instead of **2 for simple squares to bypass
         # the overhead of the generalized power evaluation function.
         half_aperture = self.aperture / 2.0
@@ -87,7 +88,8 @@ class Telescope:
 
         # b. Sky Background
         # Pixel scale in arcsec/pixel
-        pixel_scale = 206265 * (ccd.pixel_size / self.focal_length)
+        # ⚡ Bolt: Use explicit multiplication instead of division by focal_length to avoid division overhead
+        pixel_scale = 206265 * (ccd.pixel_size * self._inv_focal_length)
         # Area of a pixel in arcsec^2
         # ⚡ Bolt: Use explicit multiplication to avoid small integer power overhead
         pixel_area_arcsec = pixel_scale * pixel_scale

@@ -61,7 +61,7 @@ class TransitSimulator:
         Returns:
             tuple: (time_hours, normalized_flux)
         """
-        t_half_hours = duration_hours / 2.0
+        t_half_hours = duration_hours * 0.5
         # ⚡ Bolt: Fast linspace equivalent using np.arange bypasses np.linspace's
         # generic overhead (type checking/dispatch).
         step = duration_hours / (points - 1) if points > 1 else 0.0

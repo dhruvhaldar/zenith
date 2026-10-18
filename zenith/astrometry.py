@@ -7,6 +7,10 @@ from zenith.utils import deg_to_rad, rad_to_deg
 _DEG_TO_RAD = math.pi / 180.0
 _RAD_TO_DEG = 180.0 / math.pi
 
+# ⚡ Bolt: Pre-calculate the inverse of 86400.0 to replace expensive division
+# with faster multiplication when converting seconds to days.
+_INV_86400 = 1.0 / 86400.0
+
 def calculate_lst(longitude, time):
     """
     Calculate Local Sidereal Time (LST) in degrees.
@@ -30,7 +34,7 @@ def calculate_lst(longitude, time):
         ts = time.timestamp()
     else:
         ts = time.replace(tzinfo=timezone.utc).timestamp()
-    d = (ts / 86400.0) - 10957.5
+    d = (ts * _INV_86400) - 10957.5
 
     # Greenwich Mean Sidereal Time (GMST) in degrees
     # Approximate formula
