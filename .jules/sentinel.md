@@ -207,3 +207,8 @@
 **Vulnerability:** HTTP Parameter Pollution (HPP) in `request.args.get(key)`.
 **Learning:** `request.args.get(key)` silently discards multiple values for the same key, which can cause bypassing of upstream WAFs or WAFs parsing the query string differently.
 **Prevention:** Use `request.args.getlist(key)` and explicitly reject requests with multiple values if they are not expected.
+
+## 2026-10-20 - [Port Header Spoofing via Untrusted X-Forwarded-Port]
+**Vulnerability:** The application used `ProxyFix` but did not explicitly set `x_port=0`. In Werkzeug 3.1.x, `x_port` might default differently or be vulnerable to upstream injection if the reverse proxy (Vercel) does not explicitly sanitize or guarantee the `X-Forwarded-Port` header. This allows an attacker to send a malicious `X-Forwarded-Port` header, which Werkzeug will blindly trust, potentially leading to cache poisoning or generating malicious links if `url_for(_external=True)` is used.
+**Learning:** Only configure `ProxyFix` to trust proxy headers that are explicitly set and guaranteed by the upstream reverse proxy infrastructure. Vercel forwards `X-Forwarded-Port` directly from the client if provided.
+**Prevention:** Disable parsing for unsupported or unsanitized proxy headers (e.g., setting `x_port=0`) to prevent port header spoofing attacks.
