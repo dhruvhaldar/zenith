@@ -4,7 +4,7 @@ from zenith.utils import h, c, k_B, sigma_sb
 
 # ⚡ Bolt: Hoist constant scalar calculations to module level to avoid redundant arithmetic overhead
 # on every function invocation without sacrificing code readability.
-_STEFAN_BOLTZMANN_CONSTANT = 4.0 * np.pi * sigma_sb
+_STEFAN_BOLTZMANN_CONSTANT = 4.0 * math.pi * sigma_sb
 
 # ⚡ Bolt: Hoist Planck Law constants to module level to eliminate redundant
 # arithmetic overhead on every function invocation (~46% speedup for scalars).
