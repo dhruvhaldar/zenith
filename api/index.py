@@ -327,6 +327,5 @@ def get_hubble():
     })
 
 if __name__ == '__main__':
-    # 🛡️ Sentinel: Do not hardcode debug=True
-    debug_mode = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
-    app.run(debug=debug_mode)
+    # 🛡️ Sentinel: Do not hardcode debug=True or allow it via environment variables in production
+    app.run(debug=False)
