@@ -1,10 +1,11 @@
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 from zenith.utils import G, solar_mass, solar_radius, AU, earth_radius, jupiter_radius
 
 # ⚡ Bolt: Hoist constant scalar calculation for Kepler's 3rd Law to module level
 # to avoid redundant arithmetic overhead on every function invocation.
-_KEPLER_CONSTANT = G / (4.0 * np.pi**2)
+_KEPLER_CONSTANT = G / (4.0 * math.pi**2)
 
 class TransitSimulator:
     """
@@ -31,7 +32,7 @@ class TransitSimulator:
         self.a = (_KEPLER_CONSTANT * self.M_star * (self.period * self.period))**(1.0/3.0)
 
         # Orbital velocity (assuming circular)
-        self.v_orb = 2 * np.pi * self.a / self.period
+        self.v_orb = 2 * math.pi * self.a / self.period
 
         # Transit depth
         # ⚡ Bolt: Use explicit multiplication instead of **2
